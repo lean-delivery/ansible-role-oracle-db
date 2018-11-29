@@ -1,0 +1,71 @@
+oracle.install.responseFileVersion=/oracle/install/rspfmt_dbinstall_response_schema_v11_2_0
+oracle.install.option=INSTALL_DB_AND_CONFIG
+# ORACLE_HOSTNAME={{ ansible_hostname }}
+UNIX_GROUP_NAME={{ oracledb.install_group }}
+INVENTORY_LOCATION={{ inventory_directory }}
+SELECTED_LANGUAGES=en
+ORACLE_HOME={{ oracledb.oracle_home }}
+ORACLE_BASE={{ oracle_base }}
+oracle.install.db.InstallEdition=EE
+{% if patch_version == '11.2.0.1' %}
+oracle.install.db.isCustomInstall=false
+oracle.install.db.customComponents=
+{% elif patch_version == '11.2.0.3' or patch_version == '11.2.0.4' %}
+oracle.install.db.EEOptionsSelection=false
+{% if patch_version == '11.2.0.3' %}
+oracle.install.db.optionalComponents=oracle.rdbms.partitioning:11.2.0.3.0,oracle.oraolap:11.2.0.3.0,oracle.rdbms.dm:11.2.0.3.0,oracle.rdbms.dv:11.2.0.3.0,oracle.rdbms.lbac:11.2.0.3.0,oracle.rdbms.rat:11.2.0.3.0
+{% elif patch_version == '11.2.0.4' %}
+oracle.install.db.optionalComponents=oracle.rdbms.partitioning:11.2.0.4.0,oracle.oraolap:11.2.0.4.0,oracle.rdbms.dm:11.2.0.4.0,oracle.rdbms.dv:11.2.0.4.0,oracle.rdbms.lbac:11.2.0.4.0,oracle.rdbms.rat:11.2.0.4.0
+{% endif %}
+{% endif %}
+oracle.install.db.DBA_GROUP={{ oracledb.dba_group }}
+oracle.install.db.OPER_GROUP=oinstall
+oracle.install.db.CLUSTER_NODES=
+{% if patch_version == '11.2.0.3' or patch_version == '11.2.0.4' %}
+oracle.install.db.isRACOneInstall=
+oracle.install.db.racOneServiceName=
+{% endif %}
+oracle.install.db.config.starterdb.type=GENERAL_PURPOSE
+oracle.install.db.config.starterdb.globalDBName={{ unqname }}
+oracle.install.db.config.starterdb.SID={{ sid }}
+oracle.install.db.config.starterdb.characterSet=AL32UTF8
+oracle.install.db.config.starterdb.memoryLimit={{ oracledb.memorylimit }}
+oracle.install.db.config.starterdb.memoryOption=true
+oracle.install.db.config.starterdb.installExampleSchemas=true
+oracle.install.db.config.starterdb.enableSecuritySettings=true
+oracle.install.db.config.starterdb.password.ALL={{ syspass }}
+oracle.install.db.config.starterdb.password.SYS={{ syspassword }}
+oracle.install.db.config.starterdb.password.SYSTEM={{ systempassword }}
+oracle.install.db.config.starterdb.password.SYSMAN={{ sysmanpassword }}
+oracle.install.db.config.starterdb.password.DBSNMP={{ dbsnmppassword }}
+oracle.install.db.config.starterdb.control=DB_CONTROL
+oracle.install.db.config.starterdb.gridcontrol.gridControlServiceURL=
+{% if patch_version == '11.2.0.1' %}
+oracle.install.db.config.starterdb.dbcontrol.enableEmailNotification=false
+oracle.install.db.config.starterdb.dbcontrol.emailAddress=
+oracle.install.db.config.starterdb.dbcontrol.SMTPServer=
+{% endif %}
+oracle.install.db.config.starterdb.automatedBackup.enable=false
+oracle.install.db.config.starterdb.automatedBackup.osuid=
+oracle.install.db.config.starterdb.automatedBackup.ospwd=
+oracle.install.db.config.starterdb.storageType=FILE_SYSTEM_STORAGE
+oracle.install.db.config.starterdb.fileSystemStorage.dataLocation={{ oracledb.filesystemstorage }}
+oracle.install.db.config.starterdb.fileSystemStorage.recoveryLocation=
+oracle.install.db.config.asm.diskGroup=
+oracle.install.db.config.asm.ASMSNMPPassword=
+MYORACLESUPPORT_USERNAME=
+MYORACLESUPPORT_PASSWORD=
+SECURITY_UPDATES_VIA_MYORACLESUPPORT=false
+DECLINE_SECURITY_UPDATES=true
+PROXY_HOST=
+PROXY_PORT=
+PROXY_USER=
+PROXY_PWD=
+{% if patch_version == '11.2.0.3' or patch_version == '11.2.0.4' %}
+PROXY_REALM=
+COLLECTOR_SUPPORTHUB_URL=
+oracle.installer.autoupdates.option=
+oracle.installer.autoupdates.downloadUpdatesLoc=
+AUTOUPDATES_MYORACLESUPPORT_USERNAME=
+AUTOUPDATES_MYORACLESUPPORT_PASSWORD=
+{% endif %}

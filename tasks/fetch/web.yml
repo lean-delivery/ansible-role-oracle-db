@@ -1,0 +1,21 @@
+---
+
+- name: "Download artifacts from web"
+  get_url:
+    url: "{{ transport_web }}/{{ item }}"
+    dest: "{{ oracledb.install_directory }}"
+    validate_certs: "{{ oracledb.cert }}"
+    force: False
+  until: "'OK' in status.msg"
+  retries: 10
+  delay: 2
+  register: status
+  loop: "{{ oracle_images }}"
+  become: True
+
+- name: "Downloaded artifacts"
+  set_fact:
+    oracle_db_artifacts:
+      "{{ oracle_db_artifacts | default([]) + [ item.dest ] }}"
+  loop: "{{ status.results }}"
+  become: True

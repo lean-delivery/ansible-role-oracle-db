@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# /etc/rc.d/init.d/oracle
+# chkconfig: 2345 96 04
+
+# Description: Starts and stops the Oracle database, listeners and Enterprise Manager
+# See how we were called.
+
+EnvironmentFile=/etc/sysconfig/env.oracledb
+
+LOCKFILE=/var/lock/subsys/oracle
+LOGFILE=/var/log/oracle
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+case "$1" in
+start)
+if [ -f $LOCKFILE ]; then
+    echo $0 already running.
+    exit 1
+fi
+echo "Starting Oracle"
+echo "------------------" >> $LOGFILE
+date +"! %T %a %D : Starting Oracle Databases as part of system up." >> $LOGFILE
+echo "------------------" >> $LOGFILE
+echo -n "Starting Oracle Listeners: "
+su - oracle -c "lsnrctl start" >> $LOGFILE
+echo -e "${GREEN}Done.${NC}"
+echo -n "Starting Oracle Databases: "
+su - oracle -c "dbstart ${ORACLE_HOME}" >> $LOGFILE
+echo -e "${GREEN}Done.${NC}"
+#echo -n "Starting Oracle Enterprise Manager: "
+#su - oracle -c "emctl start dbconsole" >> $LOGFILE
+#echo -e "${GREEN}Done.${NC}"
+echo ""
+echo "------------------" >> $LOGFILE
+date +"! %T %a %D : Finished." >> $LOGFILE
+echo "------------------" >> $LOGFILE
+touch $LOCKFILE
+;;
+stop)
+if [ ! -f $LOCKFILE ]; then
+    echo $0 already stopped.
+    exit 1
+fi
+echo "Shutting Down Oracle"
+echo "------------------" >> $LOGFILE
+date +"! %T %a %D : Shutting Down Oracle Databases as part of system down." >> $LOGFILE
+echo "------------------" >> $LOGFILE
+#echo -n "Shutting Down Oracle Enterprise Manager: "
+#su - oracle -c "emctl stop dbconsole" >> $LOGFILE
+#echo -e "${GREEN}Done.${NC}"
+echo -n "Shutting Down Oracle Listeners: "
+su - oracle -c "lsnrctl stop" >> $LOGFILE
+echo -e "${GREEN}Done.${NC}"
+rm -f $LOCKFILE
+echo -n "Shutting Down Oracle Databases: "
+su - oracle -c "dbshut ${ORACLE_HOME}" >> $LOGFILE
+echo -e "${GREEN}Done.${NC}"
+echo ""
+echo "------------------" >> $LOGFILE
+date +"! %T %a %D : Finished." >> $LOGFILE
+echo "------------------" >> $LOGFILE
+;;
+restart)
+echo "Restarting Oracle"
+echo "------------------" >> $LOGFILE
+date +"! %T %a %D : Restarting Oracle Databases as part of system up." >> $LOGFILE
+echo "------------------" >> $LOGFILE
+echo -n "Restarting Oracle Listeners: "
+su - oracle -c "lsnrctl stop" >> $LOGFILE
+su - oracle -c "lsnrctl start" >> $LOGFILE
+echo -e "${GREEN}Done.${NC}"
+echo -n "Restarting Oracle Databases: "
+su - oracle -c "dbshut ${ORACLE_HOME}" >> $LOGFILE
+su - oracle -c "dbstart ${ORACLE_HOME}" >> $LOGFILE
+echo -e "${GREEN}Done.${NC}"
+#echo -n "Restarting Oracle Enterprise Manager: "
+#su - oracle -c "emctl stop dbconsole" >> $LOGFILE
+#su - oracle -c "emctl start dbconsole" >> $LOGFILE
+#echo -e "${GREEN}Done.${NC}"
+echo ""
+echo "------------------" >> $LOGFILE
+date +"! %T %a %D : Finished." >> $LOGFILE
+echo "------------------" >> $LOGFILE
+touch $LOCKFILE
+;;
+status)
+    if [ -f $LOCKFILE ]; then
+        echo -e $0 ${GREEN}started${NC}.
+    else
+        echo -e $0 ${RED}stopped${NC}.
+    fi
+    ;;
+*)
+echo "Usage: oracle {start|stop|restart|status}"
+exit 1
+esac

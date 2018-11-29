@@ -1,0 +1,9 @@
+---
+# handlers file for oracle-db
+
+- name: "Start Oracle databases daemon"
+  service:
+    name: oracledb
+    state: started
+    enabled: True
+  become: True

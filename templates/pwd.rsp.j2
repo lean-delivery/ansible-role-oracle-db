@@ -1,0 +1,8 @@
+oracle.assistants.server|S_SYSPASSWORD={{ syspassword }}
+oracle.assistants.server|S_SYSTEMPASSWORD={{ systempassword }}
+oracle.assistants.server|S_DBSNMPPASSWORD={{ dbsnmppassword }}
+{% if oracle_version | int == 11 %}
+oracle.assistants.server|S_SYSMANPASSWORD={{ sysmanpassword }}
+{% elif oracle_version | int == 12 %}
+oracle.assistants.server|S_PDBADMINPASSWORD={{ pdbadminpassword }}
+{% endif %}

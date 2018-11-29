@@ -1,0 +1,27 @@
+--   Creating tablespace with the defined properties
+create tablespace {{ db_tablespace }} datafile '{{ oracledb.filesystemstorage }}/{{ sid }}/{{ db_tablespace }}_01.dbf' size {{ oracle_default_tablespace_size }} autoextend on , '{{ oracledb.filesystemstorage }}/{{ sid }}/{{ db_tablespace }}_02.dbf' size {{ oracle_default_tablespace_size }} autoextend on , '{{ oracledb.filesystemstorage }}/{{ sid }}/{{ db_tablespace }}_03.dbf' size {{ oracle_default_tablespace_size }} autoextend on , '{{ oracledb.filesystemstorage }}/{{ sid }}/{{ db_tablespace }}_04.dbf' size {{ oracle_default_tablespace_size }} autoextend on , '{{ oracledb.filesystemstorage }}/{{ sid }}/{{ db_tablespace }}_05.dbf' size {{ oracle_default_tablespace_size }} autoextend on;
+
+--   Creating temporary tablespace with the defined properties
+create temporary tablespace {{ db_tablespace }}_temp tempfile '{{ oracledb.filesystemstorage }}/{{ sid }}/{{ db_tablespace }}_temp.dbf' size {{ oracle_temp_tablespace_size }} autoextend on;
+
+--   This procedure enables execution of certain restricted statements (most DDLs) on metadata-linked objects, from within a PDB
+{% if oracle_version | int  == 12 %}
+alter session set "_ORACLE_SCRIPT"=true;
+{% endif %}
+
+--   Creating DB user with the defined properties
+create user {{ db_user }}
+identified by {{ db_user_password }}
+default tablespace {{ db_tablespace }}
+temporary tablespace {{ db_tablespace }}_temp
+quota unlimited on {{ db_tablespace }};
+grant create session to {{ db_user }};
+grant create table to {{ db_user }};
+grant create any index to {{ db_user }};
+
+--   Defining System Global Area forms shared by all the processes belonging to a single Oracle database instance
+{% if oracle_version | int  == 12 %}
+ALTER SYSTEM SET sga_target= {{ oracledb.sga_target }}M SCOPE=BOTH;
+{% endif %}
+
+exit

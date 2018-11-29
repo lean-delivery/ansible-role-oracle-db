@@ -1,0 +1,33 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+driver:
+  name: docker
+lint:
+  name: yamllint
+  options:
+    config-file: .yamllint
+platforms:
+  - name: test-docker-oracle-xe
+    image: leandelivery/docker-systemd:centos7-xe
+    privileged: True
+    force_kill: False
+    groups:
+      - oracle_db_ct
+      - rhel_family
+provisioner:
+  name: ansible
+  log: True
+  lint:
+    name: ansible-lint
+scenario:
+  name: docker-oracle-xe
+verifier:
+  name: testinfra
+  options:
+    verbose: true
+  directory: ../resources/tests/
+  lint:
+    name: flake8
