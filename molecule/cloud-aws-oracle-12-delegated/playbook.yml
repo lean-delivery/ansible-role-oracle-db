@@ -1,0 +1,10 @@
+---
+- name: Test oracle-db 12 from static
+  hosts: oracle_db_ct
+  vars:
+    oracle_version: 12
+    patch_version: 12.1.0.2
+    transport_web: "{{ lookup('env','STORAGE_AWS') }}/oracle-install"
+  roles:
+    - role: ansible-role-oracle-db
+  become: True

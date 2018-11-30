@@ -1,0 +1,7 @@
+---
+
+- name: "Clean up install directory"
+  file:
+    state: absent
+    path: "{{ oracledb.install_directory }}"
+  become: True

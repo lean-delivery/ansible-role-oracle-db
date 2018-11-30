@@ -1,0 +1,13 @@
+---
+- name: Test oracle-db 11 from static
+  hosts: oracle_db_ct
+  vars:
+    oracle_version: 11
+    patch_version: 11.2.0.4
+    transport_web: "{{ lookup('env','STORAGE_EPC') }}/oracle-install/11g/11.2.0.4/"
+    oracle_images:
+      - "p13390677_112040_Linux-x86-64_1of7.zip"
+      - "p13390677_112040_Linux-x86-64_2of7.zip"
+  roles:
+    - role: ansible-role-oracle-db
+  become: True

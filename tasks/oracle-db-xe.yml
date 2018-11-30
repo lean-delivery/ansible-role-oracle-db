@@ -1,0 +1,14 @@
+---
+
+- name: "Install Oracle 11g2 XE"
+  package:
+    name: "{{ oracledb.install_directory }}/oracle-xe-11.2.0-1.0.x86_64.rpm"
+  become: True
+
+- name: "Run command after install for XE version"
+  command: >
+      /etc/init.d/oracle-xe configure
+      responseFile={{ oracledb.install_directory }}/{{ oracledb.rsp_file }}
+  tags:
+    - skip_ansible_lint
+  become: True

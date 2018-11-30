@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: "ansible_role_oracle_db"
+  author: "Lean Delivery Team <team@lean-delivery.com>"
+  description: "Lean Delivery Oracle Database install"
+  company: "EPAM Systems"
+  issue_tracker_url: "https://github.com/lean-delivery/ansible-role-oracle-db/issues"
+  license: "Apache"
+  min_ansible_version: "2.5"
+  platforms:
+    - name: "EL"
+      versions:
+        - "6"
+        - "7"
+
+  galaxy_tags:
+    - "development"
+    - "system"
+    - "oracle"
+    - "database"
+
+dependencies: []

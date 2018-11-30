@@ -1,0 +1,50 @@
+---
+
+- name: "Change kernel parameters"
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    ignoreerrors: True
+    reload: True
+  loop: "{{ oracledb.sysctl }}"
+  become: True
+
+- name: "Change limits"
+  lineinfile:
+    dest: "{{ oracledb.limits_file }}"
+    state: present
+    line: "{{ item }}"
+  loop: "{{ oracledb.limits }}"
+  become: True
+
+- name: "Resize /dev/shm"
+  mount:
+    path: "/dev/shm"
+    src: "tmpfs"
+    fstype: "tmpfs"
+    opts: "defaults,size={{ oracledb.shm_size_mb }}M"
+    state: "present"
+  register: "dev_shm"
+  become: True
+
+- name: "Unmount tmpfs"
+  mount:
+    path: "/dev/shm"
+    state: "unmounted"
+  when: dev_shm.changed == 1
+  tags:
+    - skip_ansible_lint
+  become: True
+
+- name: "Mounting tmpfs"
+  mount:
+    path: "/dev/shm"
+    src: "tmpfs"
+    fstype: "tmpfs"
+    opts: "defaults,size={{ oracledb.shm_size_mb }}M"
+    state: "mounted"
+  when: dev_shm.changed == 1
+  tags:
+    - skip_ansible_lint
+  become: True
