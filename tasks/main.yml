@@ -37,4 +37,4 @@
     - name: "Postinstall actions"
       include_tasks: "system/postinstall.yml"
 
-  when: etc_oratab.stat.exists == False
+  when: not etc_oratab.stat.exists

@@ -7,13 +7,13 @@
 
 - name: "Read {{ ora_inst }} content"
   include_tasks: "readOra.yml"
-  when: ora_file.stat.exists == True
+  when: ora_file.stat.exists
 
 - name: "Create oinstall group"
   group:
     name: "{{ oracledb.install_group }}"
     state: present
-  when: ora_file.stat.exists == False
+  when: not ora_file.stat.exists
   become: True
 
 - name: "Add {{ oracledb.user }} to {{ oracledb.install_group }}"
@@ -37,5 +37,5 @@
     owner: "{{ oracledb.user }}"
     group: "{{ oracledb.install_group }}"
     mode: "0774"
-  when: inventory.stat.exists == False
+  when: not inventory.stat.exists
   become: True

@@ -18,7 +18,7 @@
       command: "dd if=/dev/zero of={{ oracledb.swapfile_path }} \
         bs={{ oracledb.swapfile_bs_size_mb }}M \
         count={{ oracledb.swapfile_count }}"
-      when: swapfile.stat.exists == False
+      when: not swapfile.stat.exists
 
     - name: "Set swapfile permissions"
       file:
@@ -38,4 +38,4 @@
         state: "present"
 
   become: True
-  when: swapfile.stat.exists == False
+  when: not swapfile.stat.exists
