@@ -88,6 +88,7 @@ Role Variables
   - `sid` - instance unique identifier *default*: `"orcl"`
   - `db_user` - database user *default*: `"oracle"`
   - `db_tablespace` - mandatory tablespace of the data dictionary *default*: `"oracle"`
+  - `db_port` - database port *default*: `1521`
   - `oracle_db_swap_count` - swap file size *default*: role identify a swap file size
   - `oracle_db_swapfile` - path to swap file *default* `"/oracle-swapfile"`
 

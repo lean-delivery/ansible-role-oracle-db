@@ -92,3 +92,14 @@
   tags:
     - skip_ansible_lint
   become: True
+
+- name: "Setup database port"
+  replace:
+    path: "{{ oracledb.oracle_home }}/network/admin/{{ item }}"
+    regexp: "PORT = \\d+"
+    replace: "PORT = {{ db_port }}"
+    backup: True
+  loop:
+    - "listener.ora"
+    - "tnsnames.ora"
+  become: True

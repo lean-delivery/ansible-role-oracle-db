@@ -48,6 +48,7 @@ pdbadminpassword: "PdbAdminPassword2017SecretToken"
 
 db_user: "oracle"
 db_tablespace: "oracle"
+db_port: 1521
 
 ansible_ssh_pipelining: True
 # set default `count=` value for `dd` for copies only this number of blocks
