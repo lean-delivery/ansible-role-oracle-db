@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: "ansible_role_oracle_db"
+  role_name: "oracle-db"
   author: "Lean Delivery Team <team@lean-delivery.com>"
   description: "Lean Delivery Oracle Database install"
   company: "EPAM Systems"
