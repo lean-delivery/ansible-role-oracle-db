@@ -64,7 +64,7 @@
     src: oracledb.systemd.j2
     dest: "/etc/systemd/system/oracledb.service"
   when: ansible_distribution_major_version == '7'
-  # notify: "Start Oracle databases daemon"
+  notify: "Start Oracle databases daemon"
   become: True
 
 - name: "Create systemd Oracle databases service for Centos 6"
@@ -73,7 +73,7 @@
     dest: "/etc/init.d/oracledb"
     mode: "0755"
   when: ansible_distribution_major_version == '6'
-  # notify: "Start Oracle databases daemon"
+  notify: "Start Oracle databases daemon"
   become: True
 
 - name: "Copy template for user creation for oracle"
@@ -94,9 +94,8 @@
   become: True
 
 - name: "Stop Oracle databases"
-  service:
-    name: oracledb
-    state: stopped
+  shell: >
+    {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
   become: True
 
 - name: "Setup database port"
@@ -108,10 +107,4 @@
   loop:
     - "listener.ora"
     - "tnsnames.ora"
-  become: True
-
-- name: "Start Oracle databases"
-  service:
-    name: oracledb
-    state: started
   become: True

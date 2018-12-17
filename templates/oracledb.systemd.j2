@@ -1,6 +1,7 @@
 [Unit]
 Description=Oracle databases daemon
-After=network.target
+After=syslog.target network.target
+After=multi-user.target
 
 [Service]
 Type=forking
