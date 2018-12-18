@@ -94,6 +94,8 @@
 - name: "Stop Oracle database"
   shell: >
     {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
+  tags:
+    - skip_ansible_lint
   become: True
 
 - name: "Setup database port"
