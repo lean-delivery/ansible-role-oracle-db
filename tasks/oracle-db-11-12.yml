@@ -91,12 +91,9 @@
     - skip_ansible_lint
   become: True
 
-- name: "Stop the Oracle listener"
-  become_user: "{{ oracledb.user }}"
+- name: "Stop Oracle database"
   shell: >
-    {{ oracledb.oracle_home }}/bin/lsnrctl stop
-  tags:
-    - skip_ansible_lint
+    {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
   become: True
 
 - name: "Setup database port"
@@ -110,17 +107,11 @@
     - "tnsnames.ora"
   become: True
 
-- name: Sleeping
-  command: sleep 100
-  tags:
-    - skip_ansible_lint
-
-- name: "Start the Oracle listener"
-  become_user: "{{ oracledb.user }}"
-  shell: >
-    source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/lsnrctl start
-  tags:
-    - skip_ansible_lint
+- name: "Start Oracle database"
+  service:
+    name: oracledb
+    state: started
+    enabled: True
   become: True
 
 - name: "Copy template for port changing"
