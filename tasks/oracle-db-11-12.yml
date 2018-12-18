@@ -110,6 +110,9 @@
     - "tnsnames.ora"
   become: True
 
+- name: Sleeping
+  command: sleep 100
+
 - name: "Start the Oracle listener"
   become_user: "{{ oracledb.user }}"
   shell: >
