@@ -112,6 +112,8 @@
 
 - name: Sleeping
   command: sleep 100
+  tags:
+    - skip_ansible_lint
 
 - name: "Start the Oracle listener"
   become_user: "{{ oracledb.user }}"
