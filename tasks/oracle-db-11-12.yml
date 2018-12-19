@@ -124,7 +124,7 @@
     group: "{{ oracledb.install_group }}"
   become: True
 
-- name: "Execute sql query for Oracle user, tablespace creation"
+- name: "Execute sql query for port changing"
   become_user: "{{ oracledb.user }}"
   shell: >
     source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /

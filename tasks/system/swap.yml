@@ -18,6 +18,7 @@
       command: "dd if=/dev/zero of={{ oracledb.swapfile_path }} \
         bs={{ oracledb.swapfile_bs_size_mb }}M \
         count={{ oracledb.swapfile_count }}"
+      creates: "{{ oracledb.swapfile_path }}"
       when: not swapfile.stat.exists
 
     - name: "Set swapfile permissions"
@@ -27,9 +28,11 @@
 
     - name: "Make swap"
       command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
+      changed_when: False
 
     - name: "Swap on"
       command: "/sbin/swapon {{ oracledb.swapfile_path }}"
+      changed_when: False
 
     - name: "Add swap to /etc/fstab"
       lineinfile:

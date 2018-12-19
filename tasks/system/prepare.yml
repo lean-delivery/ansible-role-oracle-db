@@ -56,9 +56,12 @@
 
 - name: "Install requirements"
   package:
-    name: "{{ item }}"
+    name: "{{ oracledb.install_requirements }}"
     state: present
-  loop: "{{ oracledb.install_requirements }}"
+  register: status
+  retries: 10
+  delay: 2
+  until: status is success
   become: True
 
 - name: "Fetch artifact with {{ transport }} transport"
@@ -99,6 +102,8 @@
     dest: "{{ oracledb.install_directory }}/{{ oracledb.rsp_file }}"
     owner: "{{ oracledb.user }}"
     group: "{{ oracledb.install_group }}"
+  tags:
+    - skip_ansible_lint
   become: True
 
 - name: "Read Oracle profile"
