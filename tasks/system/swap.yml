@@ -19,8 +19,6 @@
         dd if=/dev/zero of={{ oracledb.swapfile_path }}
         bs={{ oracledb.swapfile_bs_size_mb }}M
         count={{ oracledb.swapfile_count }}
-      args:
-        creates: "{{ oracledb.swapfile_path }}"
 
     - name: "Set swapfile permissions"
       file:
@@ -43,3 +41,5 @@
 
   become: True
   when: not swapfile.stat.exists
+  args:
+    creates: "{{ oracledb.swapfile_path }}"
