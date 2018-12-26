@@ -5,6 +5,7 @@
     oracle_version: 12
     patch_version: 12.1.0.2
     transport_web: "{{ lookup('env','STORAGE_AWS') }}/oracle-install"
+    db_port: 1522
   roles:
     - role: ansible-role-oracle-db
   become: True

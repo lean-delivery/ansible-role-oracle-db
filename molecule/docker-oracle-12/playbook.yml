@@ -10,6 +10,7 @@
       - linuxamd64_12102_database_2of2.zip
     oracle_db_swapfile: "/oracle-swapfile-docker-12"
     oracle_db_swap_count: 2048
+    db_port: 1522
   roles:
     - role: ansible-role-oracle-db
   become: True
