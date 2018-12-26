@@ -41,8 +41,6 @@
     regexp: "^{{ ansible_default_ipv4.address }}"
     line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn }}"
     unsafe_writes: True
-  tags:
-    - skip_ansible_lint
   become: True
 
 - name: "Chown install directory to oracle user"
