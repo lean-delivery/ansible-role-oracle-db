@@ -92,13 +92,14 @@
   become: True
 
 - name: "Stop Oracle database"
+  become_user: "{{ oracledb.user }}"
   shell: >
     {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
   tags:
     - skip_ansible_lint
   become: True
 
-- name: "Setup database port"
+- name: "Update port in configs"
   replace:
     path: "{{ oracledb.oracle_home }}/network/admin/{{ item }}"
     regexp: "PORT = \\d+"
@@ -108,6 +109,7 @@
     - "listener.ora"
     - "tnsnames.ora"
   become: True
+  when: db_port is defined
 
 - name: "Start Oracle database"
   service:
@@ -116,19 +118,23 @@
     enabled: True
   become: True
 
-- name: "Copy template for port changing"
-  template:
-    src: "change_port.sql.j2"
-    dest: "{{ oracledb.oracle_home }}/change_port.sql"
-    owner: "{{ oracledb.user }}"
-    group: "{{ oracledb.install_group }}"
-  become: True
+- name: "Setup database port"
+  block:
 
-- name: "Execute sql query for port changing"
-  become_user: "{{ oracledb.user }}"
-  shell: >
-    source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
-    as sysdba @{{ oracledb.oracle_home }}/change_port.sql
-  tags:
-    - skip_ansible_lint
+    - name: "Copy template for port changing"
+      template:
+        src: "change_port.sql.j2"
+        dest: "{{ oracledb.oracle_home }}/change_port.sql"
+        owner: "{{ oracledb.user }}"
+        group: "{{ oracledb.install_group }}"
+
+    - name: "Execute sql query for port changing"
+      become_user: "{{ oracledb.user }}"
+      shell: >
+        source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
+        as sysdba @{{ oracledb.oracle_home }}/change_port.sql
+      tags:
+        - skip_ansible_lint
+
   become: True
+  when: db_port is defined

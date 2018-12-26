@@ -24,11 +24,6 @@ Requirements
 
     No problems in role with active SELinux were encountered. In a case of any issues you should [disable SELinux Temporarily or Permanently](https://www.tecmint.com/disable-selinux-temporarily-permanently-in-centos-rhel-fedora/).
 
-Dependencies
-------------
-
-Added the option ansible_ssh_pipelining: true in defaults/main.yml.
-
 About Oracle Database Express Edition (XE)
 ------------------------------------------
 

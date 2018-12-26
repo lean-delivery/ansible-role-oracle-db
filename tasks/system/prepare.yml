@@ -84,9 +84,7 @@
     dest: "{{ oracledb.install_directory }}"
     remote_src: True
   loop: "{{ oracle_db_artifacts }}"
-  when: database.stat.exists == 0
-  tags:
-    - skip_ansible_lint
+  when: not database.stat.exists
   become: True
 
 - name: "Remove installs"
@@ -102,8 +100,6 @@
     dest: "{{ oracledb.install_directory }}/{{ oracledb.rsp_file }}"
     owner: "{{ oracledb.user }}"
     group: "{{ oracledb.install_group }}"
-  tags:
-    - skip_ansible_lint
   become: True
 
 - name: "Read Oracle profile"
