@@ -29,9 +29,11 @@
 
     - name: "Make swap"
       command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
+      changed_when: False
 
     - name: "Swap on"
       command: "/sbin/swapon {{ oracledb.swapfile_path }}"
+      changed_when: False
 
     - name: "Add swap to /etc/fstab"
       lineinfile:

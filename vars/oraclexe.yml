@@ -2,7 +2,7 @@
 
 oracledb:
   install_directory: "/opt/install/oracledb"
-  rsp_template: "db.rsp.{{ oracle_version }}.j2"
+  rsp_template: "db.rsp.{{ oracle_version }}"
   rsp_file: "response/xe.rsp"
   oracle_home: "{{ oracle_base }}/product/11.2.0/xe"
   user: "oracle"

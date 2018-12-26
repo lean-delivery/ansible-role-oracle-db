@@ -96,7 +96,7 @@
 
 - name: "Copy rsp file for Oracle"
   template:
-    src: "{{ oracledb.rsp_template }}"
+    src: "{{ oracledb.rsp_template }}.j2"
     dest: "{{ oracledb.install_directory }}/{{ oracledb.rsp_file }}"
     owner: "{{ oracledb.user }}"
     group: "{{ oracledb.install_group }}"
