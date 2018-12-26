@@ -19,6 +19,9 @@
         dd if=/dev/zero of={{ oracledb.swapfile_path }}
         bs={{ oracledb.swapfile_bs_size_mb }}M
         count={{ oracledb.swapfile_count }}
+      args:
+        creates: "{{ oracledb.swapfile_path }}"
+      when: not swapfile.stat.exists
 
     - name: "Set swapfile permissions"
       file:
@@ -27,11 +30,13 @@
 
     - name: "Make swap"
       command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
-      changed_when: False
+      tags:
+        - skip_ansible_lint
 
     - name: "Swap on"
       command: "/sbin/swapon {{ oracledb.swapfile_path }}"
-      changed_when: False
+      tags:
+        - skip_ansible_lint
 
     - name: "Add swap to /etc/fstab"
       lineinfile:
@@ -41,5 +46,3 @@
 
   become: True
   when: not swapfile.stat.exists
-  args:
-    creates: "{{ oracledb.swapfile_path }}"
