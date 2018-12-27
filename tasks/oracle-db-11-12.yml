@@ -38,7 +38,7 @@
 - name: "Create db"
   become_user: "{{ oracledb.user }}"
   command: >
-      {{ oracledb.oracle_home }}/cfgtoollogs/configToolAllCommands
+      /bin/bash {{ oracledb.oracle_home }}/cfgtoollogs/configToolAllCommands
       RESPONSE_FILE={{ oracledb.install_directory }}/{{ oracledb.pwd_file }}
   register: db_install
   failed_when: "(db_install.stdout_lines is undefined) or
