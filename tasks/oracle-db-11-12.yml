@@ -14,9 +14,10 @@
   become: True
 
 - name: "Start scripts after install"
-  shell: "{{ inventory_directory }}/orainstRoot.sh"
-  tags:
-    - skip_ansible_lint
+  command: >
+      /bin/bash {{ inventory_directory }}/orainstRoot.sh
+  args:
+    creates: "/etc/oraInst.loc"
   become: True
 
 - name: "Start root.sh script"
