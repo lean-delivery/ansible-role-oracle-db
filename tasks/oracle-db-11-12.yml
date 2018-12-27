@@ -21,9 +21,10 @@
   become: True
 
 - name: "Start root.sh script"
-  shell: "{{ oracledb.oracle_home }}/root.sh"
-  tags:
-    - skip_ansible_lint
+  command: >
+      /bin/bash {{ oracledb.oracle_home }}/root.sh
+  args:
+    creates: "/etc/oratab"
   become: True
 
 - name: "Create rsp file for oracle"
