@@ -95,10 +95,10 @@
 
 - name: "Stop Oracle database"
   become_user: "{{ oracledb.user }}"
-  shell: >
+  command: >
     {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
-  tags:
-    - skip_ansible_lint
+  args:
+    removes: "/var/tmp/.oracle/sEXTPROC1521"
   become: True
 
 - name: "Update oracle configs"
@@ -140,14 +140,16 @@
         dest: "{{ oracledb.oracle_home }}/change_port.sql"
         owner: "{{ oracledb.user }}"
         group: "{{ oracledb.install_group }}"
+      become: True
 
     - name: "Execute sql query for port changing"
       become_user: "{{ oracledb.user }}"
       shell: >
         source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
         as sysdba @{{ oracledb.oracle_home }}/change_port.sql
-      tags:
-        - skip_ansible_lint
+      register: port_change
+      failed_when: "'TBD: need to fix too' in port_change.stdout_lines"
+      changed_when: False
+      become: True
 
-  become: True
   when: db_port is defined
