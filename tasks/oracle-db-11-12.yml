@@ -91,12 +91,6 @@
     - skip_ansible_lint
   become: True
 
-- name: "Wait until tnsnames.ora to be created"
-  wait_for:
-    path: "{{ oracledb.oracle_home }}/network/admin/tnsnames.ora"
-    state: present
-    timeout: 300
-
 - name: "Stop Oracle database"
   become_user: "{{ oracledb.user }}"
   shell: >
@@ -105,16 +99,27 @@
     - skip_ansible_lint
   become: True
 
-- name: "Update port in configs"
-  replace:
-    path: "{{ oracledb.oracle_home }}/network/admin/{{ item }}"
-    regexp: "PORT = \\d+"
-    replace: "PORT = {{ db_port }}"
-    backup: True
-  loop:
-    - "listener.ora"
-    - "tnsnames.ora"
-  become: True
+- name: "Update oracle configs"
+  block:
+
+    - name: "Check if configs exist"
+      stat:
+        path: "{{ oracledb.oracle_home }}/network/admin/{{ item }}"
+      loop:
+        - "listener.ora"
+        - "tnsnames.ora"
+      register: status
+
+    - name: "Update port in configs"
+      replace:
+        path: "{{ oracledb.oracle_home }}/network/admin/{{ item.item }}"
+        regexp: "PORT = \\d+"
+        replace: "PORT = {{ db_port }}"
+        backup: True
+      with_items: "{{ status.results }}"
+      when: item.stat.exists
+      become: True
+
   when: db_port is defined
 
 - name: "Start Oracle database"
