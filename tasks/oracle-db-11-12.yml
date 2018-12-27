@@ -88,8 +88,9 @@
   shell: >
       source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
       as sysdba @{{ oracledb.oracle_home }}/user.sql
-  tags:
-    - skip_ansible_lint
+  register: tablespace
+  failed_when: "'TBD: need to fix' in tablespace.stdout_lines"
+  changed_when: False
   become: True
 
 - name: "Stop Oracle database"
