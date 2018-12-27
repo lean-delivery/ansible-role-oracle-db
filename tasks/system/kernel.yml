@@ -32,7 +32,7 @@
   mount:
     path: "/dev/shm"
     state: "unmounted"
-  when: dev_shm.changed == 1
+  when: dev_shm.changed
   tags:
     - skip_ansible_lint
   become: True
@@ -44,7 +44,7 @@
     fstype: "tmpfs"
     opts: "defaults,size={{ oracledb.shm_size_mb }}M"
     state: "mounted"
-  when: dev_shm.changed == 1
+  when: dev_shm.changed
   tags:
     - skip_ansible_lint
   become: True

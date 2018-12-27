@@ -91,6 +91,12 @@
     - skip_ansible_lint
   become: True
 
+- name: "Wait until tnsnames.ora to be created"
+  wait_for:
+    path: "{{ oracledb.oracle_home }}/network/admin/tnsnames.ora"
+    state: present
+    timeout: 300
+
 - name: "Stop Oracle database"
   become_user: "{{ oracledb.user }}"
   shell: >
