@@ -2,13 +2,13 @@
 
 - name: "Install Oracle RDBMS"
   become_user: "{{ oracledb.user }}"
-  shell: >
+  command: >
       {{ oracledb.install_directory }}/database/runInstaller -silent
       -waitforcompletion -ignorePrereq -responseFile
       {{ oracledb.install_directory }}/{{ oracledb.rsp_file }}
+  args:
+    creates: "{{ oracle_base }}/product/{{ patch_version }}"
   register: rdbms_install
-  tags:
-    - skip_ansible_lint
   failed_when: "(rdbms_install.stdout_lines is undefined) or
                 ('Successfully Setup Software.' not in rdbms_install.stdout_lines)"
   become: True
