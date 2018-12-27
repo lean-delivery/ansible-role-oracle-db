@@ -37,14 +37,13 @@
 
 - name: "Create db"
   become_user: "{{ oracledb.user }}"
-  shell: >
+  command: >
       {{ oracledb.oracle_home }}/cfgtoollogs/configToolAllCommands
       RESPONSE_FILE={{ oracledb.install_directory }}/{{ oracledb.pwd_file }}
   register: db_install
-  tags:
-    - skip_ansible_lint
   failed_when: "(db_install.stdout_lines is undefined) or
                 ('perform - mode finished for action: configure' not in db_install.stdout_lines)"
+  changed_when: False
   become: True
 
 - name: "Change oratab"
