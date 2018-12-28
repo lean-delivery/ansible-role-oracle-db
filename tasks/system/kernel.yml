@@ -28,13 +28,15 @@
   register: "dev_shm"
   become: True
 
+- name: "Remember shm state"
+  set_fact:
+    need_remount: "{{ dev_shm.changed }}"
+
 - name: "Unmount tmpfs"
   mount:
     path: "/dev/shm"
     state: "unmounted"
-  when: dev_shm.changed
-  tags:
-    - skip_ansible_lint
+  when: need_remount
   become: True
 
 - name: "Mounting tmpfs"
@@ -44,7 +46,5 @@
     fstype: "tmpfs"
     opts: "defaults,size={{ oracledb.shm_size_mb }}M"
     state: "mounted"
-  when: dev_shm.changed
-  tags:
-    - skip_ansible_lint
+  when: need_remount
   become: True
