@@ -43,7 +43,7 @@
   register: db_install
   failed_when: "(db_install.stdout_lines is undefined) or
                 ('perform - mode finished for action: configure' not in db_install.stdout_lines)"
-  changed_when: False
+  changed_when: "db_install.rc == 0"
   become: True
 
 - name: "Change oratab"
@@ -89,8 +89,7 @@
       source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
       as sysdba @{{ oracledb.oracle_home }}/user.sql
   register: tablespace
-  failed_when: "'TBD: need to fix' in tablespace.stdout_lines"
-  changed_when: False
+  changed_when: "tablespace.rc == 0"
   become: True
 
 - name: "Stop Oracle database"
@@ -148,8 +147,7 @@
         source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
         as sysdba @{{ oracledb.oracle_home }}/change_port.sql
       register: port_change
-      failed_when: "'TBD: need to fix too' in port_change.stdout_lines"
-      changed_when: False
+      changed_when: "port_change.rc == 0"
       become: True
 
   when: db_port is defined

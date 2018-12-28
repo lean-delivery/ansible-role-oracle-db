@@ -31,12 +31,12 @@
     - name: "Make swap"
       command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
       register: make_swap_result
-      changed_when: not make_swap_result.rc
+      changed_when: "make_swap_result.rc == 0"
 
     - name: "Swap on"
       command: "/sbin/swapon {{ oracledb.swapfile_path }}"
       register: swap_on_result
-      changed_when: not swap_on_result.rc
+      changed_when: "swap_on_result.rc == 0"
 
     - name: "Add swap to /etc/fstab"
       lineinfile:
