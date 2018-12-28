@@ -30,13 +30,13 @@
 
     - name: "Make swap"
       command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
-      tags:
-        - skip_ansible_lint
+      register: make_swap_result
+      changed_when: not make_swap_result.rc
 
     - name: "Swap on"
       command: "/sbin/swapon {{ oracledb.swapfile_path }}"
-      tags:
-        - skip_ansible_lint
+      register: swap_on_result
+      changed_when: not swap_on_result.rc
 
     - name: "Add swap to /etc/fstab"
       lineinfile:
