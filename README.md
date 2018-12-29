@@ -3,6 +3,9 @@ Oracle Database role
 [![License](https://img.shields.io/badge/license-Apache-green.svg?style=flat)](https://raw.githubusercontent.com/lean-delivery/ansible-role-oracle-db/master/LICENSE)
 [![Build Status](https://travis-ci.org/lean-delivery/ansible-role-oracle-db.svg?branch=master)](https://travis-ci.org/lean-delivery/ansible-role-oracle-db)
 [![Build Status](https://gitlab.com/lean-delivery/ansible-role-oracle-db/badges/master/build.svg)](https://gitlab.com/lean-delivery/ansible-role-oracle-db)
+[![Galaxy](https://img.shields.io/badge/galaxy-lean__delivery.oracle__db-blue.svg)](https://galaxy.ansible.com/lean_delivery/oracle_db)
+![Ansible](https://img.shields.io/ansible/role/d/35592.svg)
+![Ansible](https://img.shields.io/badge/dynamic/json.svg?label=min_ansible_version&url=https%3A%2F%2Fgalaxy.ansible.com%2Fapi%2Fv1%2Froles%2F35592%2F&query=$.min_ansible_version)
 
 Summary
 -------
@@ -20,11 +23,6 @@ Requirements
   - **SELinux**
 
     No problems in role with active SELinux were encountered. In a case of any issues you should [disable SELinux Temporarily or Permanently](https://www.tecmint.com/disable-selinux-temporarily-permanently-in-centos-rhel-fedora/).
-
-Dependencies
-------------
-
-Added the option ansible_ssh_pipelining: true in defaults/main.yml.
 
 About Oracle Database Express Edition (XE)
 ------------------------------------------
@@ -88,6 +86,7 @@ Role Variables
   - `sid` - instance unique identifier *default*: `"orcl"`
   - `db_user` - database user *default*: `"oracle"`
   - `db_tablespace` - mandatory tablespace of the data dictionary *default*: `"oracle"`
+  - `db_port` - database port *default*: `1521`
   - `oracle_db_swap_count` - swap file size *default*: role identify a swap file size
   - `oracle_db_swapfile` - path to swap file *default* `"/oracle-swapfile"`
 
@@ -135,87 +134,87 @@ Example Playbook
 - Installing Oracle 11.2.0.1
   ```yaml
   - name: "Install oracle db"
-  hosts: all
+    hosts: all
 
-  roles:
-    - role: "lean-delivery.oracle_db"
-      oracle_version: 11
-      patch_version: 11.2.0.1
-      transport_web: "http://my-storage.example.com"
-      oracle_images:
-        - "linux.x64_11gR2_database_1of2.zip"
-        - "linux.x64_11gR2_database_2of2.zip"
+    roles:
+      - role: "lean-delivery.oracle_db"
+        oracle_version: 11
+        patch_version: 11.2.0.1
+        transport_web: "http://my-storage.example.com"
+        oracle_images:
+          - "linux.x64_11gR2_database_1of2.zip"
+          - "linux.x64_11gR2_database_2of2.zip"
   ```
 
 - Installing Oracle 11.2.0.3 from local files
   ```yaml
   - name: "Install oracle db"
-  hosts: all
+    hosts: all
 
-  roles:
-    - role: "lean-delivery.oracle_db"
-      oracle_version: 11
-      patch_version: 11.2.0.3
-      transport: "local"
-      transport_local: "/tmp"
-      oracle_images:
-        - "p10404530_112030_Linux-x86-64_1of7.zip"
-        - "p10404530_112030_Linux-x86-64_2of7.zip"
-        - "p10404530_112030_Linux-x86-64_3of7.zip"
-        - "p10404530_112030_Linux-x86-64_4of7.zip"
-        - "p10404530_112030_Linux-x86-64_5of7.zip"
-        - "p10404530_112030_Linux-x86-64_6of7.zip"
-        - "p10404530_112030_Linux-x86-64_7of7.zip"
+    roles:
+      - role: "lean-delivery.oracle_db"
+        oracle_version: 11
+        patch_version: 11.2.0.3
+        transport: "local"
+        transport_local: "/tmp"
+        oracle_images:
+          - "p10404530_112030_Linux-x86-64_1of7.zip"
+          - "p10404530_112030_Linux-x86-64_2of7.zip"
+          - "p10404530_112030_Linux-x86-64_3of7.zip"
+          - "p10404530_112030_Linux-x86-64_4of7.zip"
+          - "p10404530_112030_Linux-x86-64_5of7.zip"
+          - "p10404530_112030_Linux-x86-64_6of7.zip"
+          - "p10404530_112030_Linux-x86-64_7of7.zip"
   ```
 
 - Installing Oracle 11.2.0.4 with custom swap file size
   ```yaml
   - name: "Install oracle db"
-  hosts: all
+    hosts: all
 
-  roles:
-    - role: "lean-delivery.oracle_db"
-      oracle_version: 11
-      patch_version: 11.2.0.4
-      transport_web: "http://my-storage.example.com"
-      oracle_images:
-        - "p10404530_112040_Linux-x86-64_1of7.zip"
-        - "p10404530_112040_Linux-x86-64_2of7.zip"
-        - "p10404530_112040_Linux-x86-64_3of7.zip"
-        - "p10404530_112040_Linux-x86-64_4of7.zip"
-        - "p10404530_112040_Linux-x86-64_5of7.zip"
-        - "p10404530_112040_Linux-x86-64_6of7.zip"
-        - "p10404530_112040_Linux-x86-64_7of7.zip"
-      oracle_db_swapfile: "/oracle-swapfile-11"
-      oracle_db_swap_count: 2048
+    roles:
+      - role: "lean-delivery.oracle_db"
+        oracle_version: 11
+        patch_version: 11.2.0.4
+        transport_web: "http://my-storage.example.com"
+        oracle_images:
+          - "p10404530_112040_Linux-x86-64_1of7.zip"
+          - "p10404530_112040_Linux-x86-64_2of7.zip"
+          - "p10404530_112040_Linux-x86-64_3of7.zip"
+          - "p10404530_112040_Linux-x86-64_4of7.zip"
+          - "p10404530_112040_Linux-x86-64_5of7.zip"
+          - "p10404530_112040_Linux-x86-64_6of7.zip"
+          - "p10404530_112040_Linux-x86-64_7of7.zip"
+        oracle_db_swapfile: "/oracle-swapfile-11"
+        oracle_db_swap_count: 2048
   ```
 
 - Installing Oracle 12.1.0.2
   ```yaml
   - name: "Install oracle db"
-  hosts: all
+    hosts: all
 
-  roles:
-    - role: "lean-delivery.oracle_db"
-      oracle_version: 12
-      patch_version: 12.1.0.2
-      transport_web: "http://my-storage.example.com"
-      oracle_images:
-        - "linuxamd64_12102_database_1of2.zip"
-        - "linuxamd64_12102_database_2of2.zip"
+    roles:
+      - role: "lean-delivery.oracle_db"
+        oracle_version: 12
+        patch_version: 12.1.0.2
+        transport_web: "http://my-storage.example.com"
+        oracle_images:
+          - "linuxamd64_12102_database_1of2.zip"
+          - "linuxamd64_12102_database_2of2.zip"
   ```
 
 - Installing Oracle XE
   ```yaml
   - name: "Install oracle db"
-  hosts: all
+    hosts: all
 
-  roles:
-    - role: "lean-delivery.oracle_db"
-      oracle_version: xe
-      transport_web: "http://my-storage.example.com"
-      oracle_images:
-        - "linux.x64_11gR2_xe.zip"
+    roles:
+      - role: "lean-delivery.oracle_db"
+        oracle_version: xe
+        transport_web: "http://my-storage.example.com"
+        oracle_images:
+          - "linux.x64_11gR2_xe.zip"
   ```
 
 License

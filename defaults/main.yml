@@ -49,7 +49,6 @@ pdbadminpassword: "PdbAdminPassword2017SecretToken"
 db_user: "oracle"
 db_tablespace: "oracle"
 
-ansible_ssh_pipelining: True
 # set default `count=` value for `dd` for copies only this number of blocks
 oracle_db_swap_count: "{{ 16384 if ansible_memtotal_mb > 10240 else (ansible_memtotal_mb * 1.5)| \
                       round|int if ansible_memtotal_mb > 2048 else 8192 }}"

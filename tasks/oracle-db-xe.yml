@@ -9,6 +9,7 @@
   command: >
       /etc/init.d/oracle-xe configure
       responseFile={{ oracledb.install_directory }}/{{ oracledb.rsp_file }}
-  tags:
-    - skip_ansible_lint
+  register: configure_xe
+  failed_when: "'TBD: need to fix as well' in configure_xe.stdout_lines"
+  changed_when: False
   become: True

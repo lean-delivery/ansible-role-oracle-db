@@ -15,9 +15,12 @@
         state: "unmounted"
 
     - name: "Create swapfile"
-      command: "dd if=/dev/zero of={{ oracledb.swapfile_path }} \
-        bs={{ oracledb.swapfile_bs_size_mb }}M \
-        count={{ oracledb.swapfile_count }}"
+      command: >-
+        dd if=/dev/zero of={{ oracledb.swapfile_path }}
+        bs={{ oracledb.swapfile_bs_size_mb }}M
+        count={{ oracledb.swapfile_count }}
+      args:
+        creates: "{{ oracledb.swapfile_path }}"
       when: not swapfile.stat.exists
 
     - name: "Set swapfile permissions"
@@ -27,9 +30,13 @@
 
     - name: "Make swap"
       command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
+      register: make_swap_result
+      changed_when: "make_swap_result.rc == 0"
 
     - name: "Swap on"
       command: "/sbin/swapon {{ oracledb.swapfile_path }}"
+      register: swap_on_result
+      changed_when: "swap_on_result.rc == 0"
 
     - name: "Add swap to /etc/fstab"
       lineinfile:

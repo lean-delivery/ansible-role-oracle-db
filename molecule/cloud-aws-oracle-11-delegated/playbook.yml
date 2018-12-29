@@ -8,6 +8,7 @@
     oracle_images:
       - "p13390677_112040_Linux-x86-64_1of7.zip"
       - "p13390677_112040_Linux-x86-64_2of7.zip"
+    db_port: 1522
   roles:
     - role: ansible-role-oracle-db
   become: True

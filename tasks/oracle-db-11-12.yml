@@ -2,27 +2,29 @@
 
 - name: "Install Oracle RDBMS"
   become_user: "{{ oracledb.user }}"
-  shell: >
+  command: >
       {{ oracledb.install_directory }}/database/runInstaller -silent
       -waitforcompletion -ignorePrereq -responseFile
       {{ oracledb.install_directory }}/{{ oracledb.rsp_file }}
+  args:
+    creates: "{{ oracle_base }}/product/{{ patch_version }}"
   register: rdbms_install
-  tags:
-    - skip_ansible_lint
   failed_when: "(rdbms_install.stdout_lines is undefined) or
                 ('Successfully Setup Software.' not in rdbms_install.stdout_lines)"
   become: True
 
 - name: "Start scripts after install"
-  shell: "{{ inventory_directory }}/orainstRoot.sh"
-  tags:
-    - skip_ansible_lint
+  command: >
+      /bin/bash {{ inventory_directory }}/orainstRoot.sh
+  args:
+    creates: "/etc/oraInst.loc"
   become: True
 
 - name: "Start root.sh script"
-  shell: "{{ oracledb.oracle_home }}/root.sh"
-  tags:
-    - skip_ansible_lint
+  command: >
+      /bin/bash {{ oracledb.oracle_home }}/root.sh
+  args:
+    creates: "/etc/oratab"
   become: True
 
 - name: "Create rsp file for oracle"
@@ -35,14 +37,13 @@
 
 - name: "Create db"
   become_user: "{{ oracledb.user }}"
-  shell: >
-      {{ oracledb.oracle_home }}/cfgtoollogs/configToolAllCommands
+  command: >
+      /bin/bash {{ oracledb.oracle_home }}/cfgtoollogs/configToolAllCommands
       RESPONSE_FILE={{ oracledb.install_directory }}/{{ oracledb.pwd_file }}
   register: db_install
-  tags:
-    - skip_ansible_lint
   failed_when: "(db_install.stdout_lines is undefined) or
                 ('perform - mode finished for action: configure' not in db_install.stdout_lines)"
+  changed_when: "db_install.rc == 0"
   become: True
 
 - name: "Change oratab"
@@ -64,7 +65,6 @@
     src: oracledb.systemd.j2
     dest: "/etc/systemd/system/oracledb.service"
   when: ansible_distribution_major_version == '7'
-  notify: "Start Oracle databases daemon"
   become: True
 
 - name: "Create systemd Oracle databases service for Centos 6"
@@ -73,7 +73,6 @@
     dest: "/etc/init.d/oracledb"
     mode: "0755"
   when: ansible_distribution_major_version == '6'
-  notify: "Start Oracle databases daemon"
   become: True
 
 - name: "Copy template for user creation for oracle"
@@ -89,6 +88,66 @@
   shell: >
       source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
       as sysdba @{{ oracledb.oracle_home }}/user.sql
-  tags:
-    - skip_ansible_lint
+  register: tablespace
+  changed_when: "tablespace.rc == 0"
   become: True
+
+- name: "Stop Oracle database"
+  become_user: "{{ oracledb.user }}"
+  command: >
+    {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
+  args:
+    removes: "/var/tmp/.oracle/sEXTPROC1521"
+  become: True
+
+- name: "Update oracle configs"
+  block:
+
+    - name: "Check if configs exist"
+      stat:
+        path: "{{ oracledb.oracle_home }}/network/admin/{{ item }}"
+      loop:
+        - "listener.ora"
+        - "tnsnames.ora"
+      register: status
+
+    - name: "Update port in configs"
+      replace:
+        path: "{{ oracledb.oracle_home }}/network/admin/{{ item.item }}"
+        regexp: "PORT = \\d+"
+        replace: "PORT = {{ db_port }}"
+        backup: True
+      with_items: "{{ status.results }}"
+      when: item.stat.exists
+      become: True
+
+  when: db_port is defined
+
+- name: "Start Oracle database"
+  service:
+    name: oracledb
+    state: started
+    enabled: True
+  become: True
+
+- name: "Setup database port"
+  block:
+
+    - name: "Copy template for port changing"
+      template:
+        src: "change_port.sql.j2"
+        dest: "{{ oracledb.oracle_home }}/change_port.sql"
+        owner: "{{ oracledb.user }}"
+        group: "{{ oracledb.install_group }}"
+      become: True
+
+    - name: "Execute sql query for port changing"
+      become_user: "{{ oracledb.user }}"
+      shell: >
+        source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
+        as sysdba @{{ oracledb.oracle_home }}/change_port.sql
+      register: port_change
+      changed_when: "port_change.rc == 0"
+      become: True
+
+  when: db_port is defined
