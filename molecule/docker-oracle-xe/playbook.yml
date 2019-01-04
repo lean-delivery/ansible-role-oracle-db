@@ -1,6 +1,14 @@
 ---
 - name: Install oracle-db
   hosts: oracle_db_ct
+  pre_tasks:
+    - name: "Adding hostname entry in /etc/hosts"
+      lineinfile:
+        path: /etc/hosts
+        regexp: "^{{ ansible_default_ipv4.address }}"
+        line: "{{ ansible_default_ipv4.address }} {{ ansible_fqdn }}"
+        unsafe_writes: True
+      become: True
   vars:
     oracle_version: xe
     transport_web: "{{ lookup('env','STORAGE_EPC') }}/oracle-install"
