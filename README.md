@@ -137,7 +137,7 @@ Example Playbook
     hosts: all
 
     roles:
-      - role: "lean-delivery.oracle_db"
+      - role: "lean_delivery.oracle_db"
         oracle_version: 11
         patch_version: 11.2.0.1
         transport_web: "http://my-storage.example.com"
@@ -152,7 +152,7 @@ Example Playbook
     hosts: all
 
     roles:
-      - role: "lean-delivery.oracle_db"
+      - role: "lean_delivery.oracle_db"
         oracle_version: 11
         patch_version: 11.2.0.3
         transport: "local"
@@ -173,7 +173,7 @@ Example Playbook
     hosts: all
 
     roles:
-      - role: "lean-delivery.oracle_db"
+      - role: "lean_delivery.oracle_db"
         oracle_version: 11
         patch_version: 11.2.0.4
         transport_web: "http://my-storage.example.com"
@@ -195,7 +195,7 @@ Example Playbook
     hosts: all
 
     roles:
-      - role: "lean-delivery.oracle_db"
+      - role: "lean_delivery.oracle_db"
         oracle_version: 12
         patch_version: 12.1.0.2
         transport_web: "http://my-storage.example.com"
@@ -210,7 +210,7 @@ Example Playbook
     hosts: all
 
     roles:
-      - role: "lean-delivery.oracle_db"
+      - role: "lean_delivery.oracle_db"
         oracle_version: xe
         transport_web: "http://my-storage.example.com"
         oracle_images:

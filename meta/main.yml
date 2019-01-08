@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: "oracle-db"
+  role_name: "oracle_db"
   author: "Lean Delivery Team <team@lean-delivery.com>"
   description: "Lean Delivery Oracle Database install"
   company: "EPAM Systems"
