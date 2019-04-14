@@ -17,7 +17,7 @@
   become: True
 
 - name: "Check oracle inventory requirements"
-  include_tasks: "oraInst/checkOraInst.yml"
+  include_tasks: "../oraInst/checkOraInst.yml"
 
 - name: "Create oracledb directories (install)"
   file:
@@ -93,4 +93,4 @@
   become: True
 
 - name: "Read Oracle profile"
-  include_tasks: "profile/oracle-db-profile.yml"
+  include_tasks: "../profile/oracle-db-profile.yml"

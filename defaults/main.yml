@@ -48,6 +48,7 @@ pdbadminpassword: "PdbAdminPassword2017SecretToken"
 
 db_user: "oracle"
 db_tablespace: "oracle"
+db_startup_timeout: 300
 
 # set default `count=` value for `dd` for copies only this number of blocks
 oracle_db_swap_count: "{{ 16384 if ansible_memtotal_mb > 10240 else (ansible_memtotal_mb * 1.5)| \
