@@ -67,7 +67,7 @@ AWS Oracle DB XE:
     AWS_REGION: us-east-1
   stage: deployment test
   script:
-    - pwd
+    - git clone https://github.com/lean-delivery/ansible-molecule-drivers.git molecule/resources/provisioning
     - molecule test -s cloud-aws-oracle-xe-delegated
   tags:
     - aws
