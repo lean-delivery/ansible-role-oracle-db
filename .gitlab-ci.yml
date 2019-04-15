@@ -62,7 +62,7 @@ Ansible lint:
   tags:
     - aws
 
-.AWS Oracle DB XE:
+AWS Oracle DB XE:
   variables:
     AWS_REGION: us-east-1
   stage: deployment test
