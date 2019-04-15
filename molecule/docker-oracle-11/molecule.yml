@@ -15,7 +15,6 @@ platforms:
     privileged: True
     force_kill: False
     groups:
-      - oracle_db_ct
       - rhel_family
 provisioner:
   name: ansible

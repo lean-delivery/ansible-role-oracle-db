@@ -1,6 +1,6 @@
 ---
 - name: Install oracle-db
-  hosts: oracle_db_ct
+  hosts: all
   vars:
     oracle_version: 12
     patch_version: 12.1.0.2

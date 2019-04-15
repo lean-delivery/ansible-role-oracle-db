@@ -1,6 +1,6 @@
 ---
 - name: Test oracle-db xe from static
-  hosts: oracle_db_ct
+  hosts: all
   vars:
     oracle_version: xe
     transport_web: "{{ lookup('env','STORAGE_AWS') }}/oracle-install"

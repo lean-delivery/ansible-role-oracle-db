@@ -19,7 +19,7 @@ Description=Swap Off\n\
 [Service]\n\
 Type=oneshot\n\
 RemainAfterExit=true\n\
-ExecStop=/sbin/swapoff /oracle-swapfile-docker-12\n\
+ExecStop=/sbin/swapoff {{ oracle_db_swapfile }}\n\
 \n\
 [Install]\n\
 WantedBy=multi-user.target\n" > /etc/systemd/system/swapoff.service & systemctl enable swapoff.service

@@ -17,21 +17,20 @@ platforms:
     wait_timeout: 3600
     groups:
       - rhel_family
-      - oracle_db_ct
 provisioner:
   name: ansible
   log: True
   playbooks:
-    create: ../resources/provisioning/create.yml
-    prepare: ../resources/provisioning/prepare.yml
-    destroy: ../resources/provisioning/destroy.yml
+    create: ../resources/provisioning/EPC/create.yml
+    prepare: ../resources/provisioning/EPC/prepare.yml
+    destroy: ../resources/provisioning/EPC/destroy.yml
   config_options:
     ssh_connection:
       control_path: "/var/ans/%%h"
   lint:
     name: ansible-lint
   env:
-    ANSIBLE_LIBRARY: "/home/gitlab-runner/.local/lib/python2.7/site-packages/epam_ansible"
+    ANSIBLE_LIBRARY: ${ANSIBLE_LIBRARY}
 scenario:
   name: cloud-epc-oracle-xe-delegated
 verifier:
@@ -40,4 +39,4 @@ verifier:
     verbose: true
   directory: ../resources/tests/
   lint:
-    name: flake8
+name: flake8

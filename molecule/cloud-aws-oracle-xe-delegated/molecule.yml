@@ -11,27 +11,29 @@ lint:
     config-file: .yamllint
 platforms:
   - name: test-oracle-db-xe
-    shape: large
-    image: CentOS7_64-bit
-    region: AWS-EUCENTRAL
-    wait_timeout: 3600
+    image: ami-9887c6e7
+    instance_type: m5.large
+    region: us-east-1
+    vpc_subnet_id: subnet-05a2ef2b767afec50
+    assign_public_ip: False
+    spot_price: 0.04
+    security_group_name:
+      - default
+    wait_timeout: 1800
+    ssh_user: centos
     groups:
       - rhel_family
-      - oracle_db_ct
 provisioner:
   name: ansible
   log: True
   playbooks:
-    create: ../resources/provisioning/create.yml
-    prepare: ../resources/provisioning/prepare.yml
-    destroy: ../resources/provisioning/destroy.yml
-  config_options:
-    ssh_connection:
-      control_path: "/var/ans/%%h"
+    create: ../resources/provisioning/AWS/create.yml
+    prepare: ../resources/provisioning/AWS/prepare.yml
+    destroy: ../resources/provisioning/AWS/destroy.yml
   lint:
     name: ansible-lint
   env:
-    ANSIBLE_LIBRARY: "/home/gitlab-runner/.local/lib/python2.7/site-packages/epam_ansible"
+    ANSIBLE_LIBRARY: ${ANSIBLE_LIBRARY}
 scenario:
   name: cloud-aws-oracle-xe-delegated
 verifier:
@@ -40,4 +42,4 @@ verifier:
     verbose: true
   directory: ../resources/tests/
   lint:
-    name: flake8
+name: flake8
