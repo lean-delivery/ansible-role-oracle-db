@@ -39,4 +39,4 @@ verifier:
     verbose: true
   directory: ../resources/tests/
   lint:
-name: flake8
+    name: flake8
