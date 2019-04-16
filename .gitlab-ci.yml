@@ -39,7 +39,7 @@ Docker Oracle DB 11:
   tags:
     - aws
 
-.Docker Oracle DB XE:
+Docker Oracle DB XE:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-xe
@@ -93,7 +93,7 @@ Docker Oracle DB 11:
   tags:
     - delegated
 
-.EPC Oracle DB XE:
+EPC Oracle DB XE:
   variables:
     EPC_REGION: EPAM-BY2
   stage: deployment test
