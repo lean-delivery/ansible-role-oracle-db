@@ -25,14 +25,14 @@ Ansible lint:
     - aws
 
 
-Docker Oracle DB 12:
+.Docker Oracle DB 12:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-12
   tags:
     - aws
 
-Docker Oracle DB 11:
+.Docker Oracle DB 11:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-11
@@ -93,7 +93,7 @@ Docker Oracle DB XE:
   tags:
     - delegated
 
-EPC Oracle DB XE:
+.EPC Oracle DB XE:
   variables:
     EPC_REGION: EPAM-BY2
   stage: deployment test
