@@ -144,8 +144,8 @@
     - name: "Execute sql query for port changing"
       become_user: "{{ oracledb.user }}"
       shell: >
-        source /home/{{ oracledb.user }}/.bashrc && echo exit | {{ oracledb.oracle_home }}/bin/sqlplus /
-        as sysdba @{{ oracledb.oracle_home }}/change_port.sql;
+        source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
+        as sysdba @{{ oracledb.oracle_home }}/change_port.sql
       register: port_change
       changed_when: "port_change.rc == 0"
       become: True

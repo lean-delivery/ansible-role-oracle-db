@@ -25,21 +25,21 @@ Ansible lint:
     - aws
 
 
-.Docker Oracle DB 12:
+Docker Oracle DB 12:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-12
   tags:
     - aws
 
-.Docker Oracle DB 11:
+Docker Oracle DB 11:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-11
   tags:
     - aws
 
-.Docker Oracle DB XE:
+Docker Oracle DB XE:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-xe
@@ -61,11 +61,11 @@ AWS Oracle DB 11:
     AWS_REGION: us-east-1
   stage: deployment test
   script:
-    - molecule destroy -s cloud-aws-oracle-11-delegated
+    - molecule test -s cloud-aws-oracle-11-delegated
   tags:
     - aws
 
-.AWS Oracle DB XE:
+AWS Oracle DB XE:
   variables:
     AWS_REGION: us-east-1
   stage: deployment test
@@ -80,7 +80,7 @@ EPC Oracle DB 11:
     EPC_REGION: EPAM-BY2
   stage: deployment test
   script:
-    - molecule destroy -s cloud-epc-oracle-11-delegated
+    - molecule test -s cloud-epc-oracle-11-delegated
   tags:
     - delegated
 
@@ -89,11 +89,11 @@ EPC Oracle DB 12:
     EPC_REGION: EPAM-BY2
   stage: deployment test
   script:
-    - molecule destroy -s cloud-epc-oracle-12-delegated
+    - molecule test -s cloud-epc-oracle-12-delegated
   tags:
     - delegated
 
-.EPC Oracle DB XE:
+EPC Oracle DB XE:
   variables:
     EPC_REGION: EPAM-BY2
   stage: deployment test
