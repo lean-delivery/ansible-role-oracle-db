@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum -y install cloud-utils cloud-utils-growpart
+sudo growpart /dev/xvda 1
+sudo resize2fs /dev/xvda1
+sudo sleep 2 && shutdown -r now "Prepare volume"

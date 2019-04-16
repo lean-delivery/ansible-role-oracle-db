@@ -39,7 +39,7 @@ Ansible lint:
   tags:
     - aws
 
-Docker Oracle DB XE:
+.Docker Oracle DB XE:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-xe
@@ -65,7 +65,7 @@ Docker Oracle DB XE:
   tags:
     - aws
 
-.AWS Oracle DB XE:
+AWS Oracle DB XE:
   variables:
     AWS_REGION: us-east-1
   stage: deployment test
