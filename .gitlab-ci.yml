@@ -4,13 +4,16 @@ stages:
   - deployment test
 
 before_script:
+  - rm -rf molecule/resources/provisioning
   - ansible --version
+  - ansible-lint --version
   - molecule --version
+  - git clone https://github.com/lean-delivery/ansible-molecule-drivers.git molecule/resources/provisioning
 
 variables:
   GET_SOURCES_ATTEMPTS: "5"
 
-.Ansible lint:
+Ansible lint:
   stage: lint
   before_script:
     - git clone https://github.com/lean-delivery/ansible-lint-rules.git ~/ansible-lint-rules
@@ -22,14 +25,14 @@ variables:
     - aws
 
 
-.Docker Oracle DB 12:
+Docker Oracle DB 12:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-12
   tags:
     - aws
 
-.Docker Oracle DB 11:
+Docker Oracle DB 11:
   stage: deployment test
   script:
     - molecule test -s docker-oracle-11
@@ -62,12 +65,11 @@ variables:
   tags:
     - aws
 
-AWS Oracle DB XE:
+.AWS Oracle DB XE:
   variables:
     AWS_REGION: us-east-1
   stage: deployment test
   script:
-    - git clone https://github.com/lean-delivery/ansible-molecule-drivers.git molecule/resources/provisioning
     - molecule test -s cloud-aws-oracle-xe-delegated
   tags:
     - aws
