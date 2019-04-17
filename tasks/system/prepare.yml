@@ -92,5 +92,6 @@
     group: "{{ oracledb.install_group }}"
   become: True
 
-- name: "Read Oracle profile"
+- name: "Write Oracle profile"
   include_tasks: "../profile/oracle-db-profile.yml"
+  when: oracle_version == 11 or oracle_version == 12
