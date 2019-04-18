@@ -19,7 +19,7 @@ oracledb:
   swapfile_path: '{{ oracle_db_swapfile }}'
   swapfile_bs_size_mb: 1
   swapfile_count: '{{ oracle_db_swap_count }}'
-  shm_size_mb: {{ ansible_memtotal_mb }}'
+  shm_size_mb: '{{ ansible_memtotal_mb }}'
   limits_file: /etc/security/limits.conf
   limits:
     - oracle   soft   nofile   1024
