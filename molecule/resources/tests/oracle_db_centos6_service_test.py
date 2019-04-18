@@ -1,2 +1,3 @@
-def oracledb_service_is_running(host):
-    assert host.service('oracledb').is_running
+def test_oracledb_service(host):
+    with host.sudo():
+        assert host.service("oracledb").is_running
