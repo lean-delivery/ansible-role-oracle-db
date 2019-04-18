@@ -1,5 +1,9 @@
 ---
 
+unqname: XE
+sid: XE
+oracle_base: /u01/app/oracle
+
 oracledb:
   install_directory: "/opt/install/oracledb"
   rsp_template: "db.rsp.{{ oracle_version }}"
