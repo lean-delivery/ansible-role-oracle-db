@@ -80,7 +80,7 @@ EPC Oracle DB 11:
     EPC_REGION: EPAM-BY2
   stage: deployment test
   script:
-    - molecule test -s cloud-epc-oracle-11-delegated --destroy=never
+    - molecule destroy -s cloud-epc-oracle-11-delegated
   tags:
     - delegated
 
