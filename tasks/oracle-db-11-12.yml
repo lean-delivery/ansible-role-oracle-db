@@ -114,7 +114,7 @@
     - name: Update port in configs
       replace:
         path: '{{ oracledb.oracle_home }}/network/admin/{{ item.item }}'
-        regexp: 'PORT = \\d+'
+        regexp: "PORT = \\d+"
         replace: 'PORT = {{ db_port }}'
         backup: True
       with_items: '{{ status.results }}'
