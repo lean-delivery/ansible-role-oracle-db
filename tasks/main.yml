@@ -28,7 +28,7 @@
 
     - name: Oracle DB XE install
       include_tasks: oracle-db-xe.yml
-      when: oracle_version == xe
+      when: oracle_version == 'xe'
 
     - name: Oracle DB 11 or 12 install
       include_tasks: oracle-db-11-12.yml

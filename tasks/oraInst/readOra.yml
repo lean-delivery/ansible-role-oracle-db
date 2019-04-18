@@ -13,13 +13,13 @@
   set_fact:
     oracledb.install_group: "{{ item.split('=').1 }}"
   loop: '{{ ora_inst_content.splitlines() }}'
-  when: item.split('=').0 == inst_group
+  when: item.split('=').0 == 'inst_group'
 
 - name: Get value of inventory_loc
   set_fact:
     inventory_directory: "{{ item.split('=').1 }}"
   loop: '{{ ora_inst_content }}'
-  when: item.split('=').0 == inventory_loc
+  when: item.split('=').0 == 'inventory_loc'
 
 - name: 'Add {{ oracledb.user }} to {{ oracledb.install_group }}'
   user:
