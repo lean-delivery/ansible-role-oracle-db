@@ -1,41 +1,41 @@
 ---
 
-- name: "Check {{ ora_inst }} exists"
+- name: 'Check {{ ora_inst }} exists'
   stat:
-    path: "{{ ora_inst }}"
+    path: '{{ ora_inst }}'
   register: ora_file
 
-- name: "Read {{ ora_inst }} content"
-  include_tasks: "readOra.yml"
+- name: 'Read {{ ora_inst }} content'
+  include_tasks: readOra.yml
   when: ora_file.stat.exists
 
-- name: "Create oinstall group"
+- name: Create oinstall group
   group:
-    name: "{{ oracledb.install_group }}"
+    name: '{{ oracledb.install_group }}'
     state: present
   when: not ora_file.stat.exists
   become: True
 
-- name: "Add {{ oracledb.user }} to {{ oracledb.install_group }}"
+- name: 'Add {{ oracledb.user }} to {{ oracledb.install_group }}'
   user:
-    name: "{{ oracledb.user }}"
-    groups: "{{ oracledb.install_group }}"
+    name: '{{ oracledb.user }}'
+    groups: '{{ oracledb.install_group }}'
     append: True
   become: True
 
-- name: "Check inventory directory"
+- name: Check inventory directory
   stat:
-    path: "{{ inventory_directory }}"
+    path: '{{ inventory_directory }}'
   register: inventory
 
 # setting permissions 0774 for write access for all users in oinstall group
-- name: "Create inventory directory"
+- name: Create inventory directory
   file:
   args:
     state: directory
-    path: "{{ inventory_directory }}"
-    owner: "{{ oracledb.user }}"
-    group: "{{ oracledb.install_group }}"
-    mode: "0774"
+    path: '{{ inventory_directory }}'
+    owner: '{{ oracledb.user }}'
+    group: '{{ oracledb.install_group }}'
+    mode: 0774
   when: not inventory.stat.exists
   become: True

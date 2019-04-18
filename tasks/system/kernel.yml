@@ -1,50 +1,50 @@
 ---
 
-- name: "Change kernel parameters"
+- name: Change kernel parameters
   sysctl:
-    name: "{{ item.name }}"
-    value: "{{ item.value }}"
+    name: '{{ item.name }}'
+    value: '{{ item.value }}'
     state: present
     ignoreerrors: True
     reload: True
-  loop: "{{ oracledb.sysctl }}"
+  loop: '{{ oracledb.sysctl }}'
   become: True
 
-- name: "Change limits"
+- name: Change limits
   lineinfile:
-    dest: "{{ oracledb.limits_file }}"
+    dest: '{{ oracledb.limits_file }}'
     state: present
-    line: "{{ item }}"
-  loop: "{{ oracledb.limits }}"
+    line: '{{ item }}'
+  loop: '{{ oracledb.limits }}'
   become: True
 
-- name: "Resize /dev/shm"
+- name: Resize /dev/shm
   mount:
-    path: "/dev/shm"
-    src: "tmpfs"
-    fstype: "tmpfs"
-    opts: "defaults,size={{ oracledb.shm_size_mb }}M"
-    state: "present"
-  register: "dev_shm"
+    path: /dev/shm
+    src: tmpfs
+    fstype: tmpfs
+    opts: 'defaults,size={{ oracledb.shm_size_mb }}M'
+    state: present
+  register: dev_shm
   become: True
 
-- name: "Remember shm state"
+- name: Remember shm state
   set_fact:
-    need_remount: "{{ dev_shm.changed }}"
+    need_remount: '{{ dev_shm.changed }}'
 
-- name: "Unmount tmpfs"
+- name: Unmount tmpfs
   mount:
-    path: "/dev/shm"
-    state: "unmounted"
+    path: /dev/shm
+    state: unmounted
   when: need_remount
   become: True
 
-- name: "Mounting tmpfs"
+- name: Mounting tmpfs
   mount:
-    path: "/dev/shm"
-    src: "tmpfs"
-    fstype: "tmpfs"
-    opts: "defaults,size={{ oracledb.shm_size_mb }}M"
-    state: "mounted"
+    path: /dev/shm
+    src: tmpfs
+    fstype: tmpfs
+    opts: 'defaults,size={{ oracledb.shm_size_mb }}M'
+    state: mounted
   when: need_remount
   become: True

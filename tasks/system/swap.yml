@@ -1,48 +1,48 @@
 ---
-- name: "Check swapfile"
+- name: Check swapfile
   stat:
-    path: "{{ oracledb.swapfile_path }}"
+    path: '{{ oracledb.swapfile_path }}'
   register: swapfile
 
-- name: "Create swapfile section"
+- name: Create swapfile section
   block:
 
-    - name: "Unmount swap"
+    - name: Unmount swap
       mount:
-        name: "swap"
-        src: "{{ oracledb.swapfile_path }}"
-        fstype: "swap"
-        state: "unmounted"
+        name: swap
+        src: '{{ oracledb.swapfile_path }}'
+        fstype: swap
+        state: unmounted
 
-    - name: "Create swapfile"
+    - name: Create swapfile
       command: >-
         dd if=/dev/zero of={{ oracledb.swapfile_path }}
         bs={{ oracledb.swapfile_bs_size_mb }}M
         count={{ oracledb.swapfile_count }}
       args:
-        creates: "{{ oracledb.swapfile_path }}"
+        creates: '{{ oracledb.swapfile_path }}'
       when: not swapfile.stat.exists
 
-    - name: "Set swapfile permissions"
+    - name: Set swapfile permissions
       file:
-        path: "{{ oracledb.swapfile_path }}"
-        mode: "0600"
+        path: '{{ oracledb.swapfile_path }}'
+        mode: 0600
 
-    - name: "Make swap"
-      command: "/sbin/mkswap {{ oracledb.swapfile_path }}"
+    - name: Make swap
+      command: '/sbin/mkswap {{ oracledb.swapfile_path }}'
       register: make_swap_result
-      changed_when: "make_swap_result.rc == 0"
+      changed_when: make_swap_result.rc == 0
 
-    - name: "Swap on"
-      command: "/sbin/swapon {{ oracledb.swapfile_path }}"
+    - name: Swap on
+      command: '/sbin/swapon {{ oracledb.swapfile_path }}'
       register: swap_on_result
-      changed_when: "swap_on_result.rc == 0"
+      changed_when: swap_on_result.rc == 0
 
-    - name: "Add swap to /etc/fstab"
+    - name: Add swap to /etc/fstab
       lineinfile:
-        dest: "/etc/fstab"
-        line: "{{ oracledb.swapfile_path }} swap swap 0 0"
-        state: "present"
+        dest: /etc/fstab
+        line: '{{ oracledb.swapfile_path }} swap swap 0 0'
+        state: present
 
   become: True
   when: not swapfile.stat.exists
