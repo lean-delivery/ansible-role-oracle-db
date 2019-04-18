@@ -11,7 +11,7 @@ lint:
     config-file: .yamllint
 platforms:
   - name: test-oracle-db-11
-    shape: medium
+    shape: large
     image: CentOS6_64-bit
     region: EPAM-BY2
     wait_timeout: 3600
