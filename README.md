@@ -76,23 +76,24 @@ Role Variables
   Available:
     - `web` Fetching artifact from custom web uri
     - `local` Local artifact
-  - `transport_web` - URI for http/https artifact e.g *default*: `"http://my-storage.example.com"`
-  - `transport_local` - path for local artifact *default*: `"/tmp"`
+  - `transport_web` - URI for http/https artifact e.g *default*: `http://my-storage.example.com`
+  - `transport_local` - path for local artifact *default*: `/tmp`
   - `oracle_images` - list of Oracle Database files *default*:
-      - ` - "linuxamd64_12102_database_1of2.zip"`
-      - ` - "linuxamd64_12102_database_2of2.zip"`
-  - `oracle_base` - oracle base installation directory *default*: `"/opt/oracledb"`
-  - `unqname` - database unique name *default*: `"orcl"`
-  - `sid` - instance unique identifier *default*: `"orcl"`
-  - `db_user` - database user *default*: `"oracle"`
-  - `db_tablespace` - mandatory tablespace of the data dictionary *default*: `"oracle"`
+      - ` - linuxamd64_12102_database_1of2.zip`
+      - ` - linuxamd64_12102_database_2of2.zip`
+  - `oracle_base` - oracle base installation directory *default*: `/opt/oracledb`
+  - `unqname` - database unique name *default*: `orcl`
+  - `sid` - instance unique identifier *default*: `orcl`
+  - `db_user` - database user *default*: `oracle`
+  - `db_tablespace` - mandatory tablespace of the data dictionary *default*: `oracle`
   - `db_port` - database port *default*: `1521`
   - `oracle_db_swap_count` - swap file size *default*: role identify a swap file size
-  - `oracle_db_swapfile` - path to swap file *default* `"/oracle-swapfile"`
+  - `oracle_db_swapfile` - path to swap file *default* `/oracle-swapfile`
+  - `db_startup_timeout` - startup timeout for systemd service *default* `300`
 
   - **For Oracle Universal Installer**
-    - `inventory_directory` *default* `"/opt/oraInventory"`
-    - `ora_inst` *default*`"/etc/oraInst.loc"`
+    - `inventory_directory` *default* `/opt/oraInventory`
+    - `ora_inst` *default*`/etc/oraInst.loc`
 
   - **Password for administrative accounts**
 
@@ -110,22 +111,22 @@ Role Variables
 
   - **Default password for administrative accounts Oracle 11, XE versions**
     ```yaml
-    syspass: "SysPassOracle2017SecretToken"
-    syspassword: "SysPassword2017SecretToken"
-    systempassword: "SystemPassword2017SecretToken"
-    sysmanpassword: "SysmanPassword2017SecretToken"
-    dbsnmppassword: "DbSnmpPassword2017SecretToken"
-    db_user_password: "DbPassword2017SecretToken" (for created DB schema)
+    syspass: SysPassOracle2017SecretToken
+    syspassword: SysPassword2017SecretToken
+    systempassword: SystemPassword2017SecretToken
+    sysmanpassword: SysmanPassword2017SecretToken
+    dbsnmppassword: DbSnmpPassword2017SecretToken
+    db_user_password: DbPassword2017SecretToken (for created DB schema)
     ```
 
   - **Default password for administrative accounts Oracle 12 version**
     ```yaml
-    syspass: "SysPassOracle2017SecretToken"
-    syspassword: "SysPassword2017SecretToken"
-    systempassword: "SystemPassword2017SecretToken"
-    dbsnmppassword: "DbSnmpPassword2017SecretToken"
-    pdbadminpassword: "PdbAdminPassword2017SecretToken"
-    db_user_password: "DbPassword2017SecretToken" (for created DB schema)
+    syspass: SysPassOracle2017SecretToken
+    syspassword: SysPassword2017SecretToken
+    systempassword: SystemPassword2017SecretToken
+    dbsnmppassword: DbSnmpPassword2017SecretToken
+    pdbadminpassword: PdbAdminPassword2017SecretToken
+    db_user_password: DbPassword2017SecretToken (for created DB schema)
     ```
 
 Example Playbook
@@ -133,88 +134,88 @@ Example Playbook
 
 - Installing Oracle 11.2.0.1
   ```yaml
-  - name: "Install oracle db"
+  - name: Install oracle db
     hosts: all
 
     roles:
-      - role: "lean_delivery.oracle_db"
+      - role: lean_delivery.oracle_db
         oracle_version: 11
         patch_version: 11.2.0.1
-        transport_web: "http://my-storage.example.com"
+        transport_web: http://my-storage.example.com
         oracle_images:
-          - "linux.x64_11gR2_database_1of2.zip"
-          - "linux.x64_11gR2_database_2of2.zip"
+          - linux.x64_11gR2_database_1of2.zip
+          - linux.x64_11gR2_database_2of2.zip
   ```
 
 - Installing Oracle 11.2.0.3 from local files
   ```yaml
-  - name: "Install oracle db"
+  - name: Install oracle db
     hosts: all
 
     roles:
-      - role: "lean_delivery.oracle_db"
+      - role: lean_delivery.oracle_db
         oracle_version: 11
         patch_version: 11.2.0.3
-        transport: "local"
-        transport_local: "/tmp"
+        transport: local
+        transport_local: /tmp
         oracle_images:
-          - "p10404530_112030_Linux-x86-64_1of7.zip"
-          - "p10404530_112030_Linux-x86-64_2of7.zip"
-          - "p10404530_112030_Linux-x86-64_3of7.zip"
-          - "p10404530_112030_Linux-x86-64_4of7.zip"
-          - "p10404530_112030_Linux-x86-64_5of7.zip"
-          - "p10404530_112030_Linux-x86-64_6of7.zip"
-          - "p10404530_112030_Linux-x86-64_7of7.zip"
+          - p10404530_112030_Linux-x86-64_1of7.zip
+          - p10404530_112030_Linux-x86-64_2of7.zip
+          - p10404530_112030_Linux-x86-64_3of7.zip
+          - p10404530_112030_Linux-x86-64_4of7.zip
+          - p10404530_112030_Linux-x86-64_5of7.zip
+          - p10404530_112030_Linux-x86-64_6of7.zip
+          - p10404530_112030_Linux-x86-64_7of7.zip
   ```
 
 - Installing Oracle 11.2.0.4 with custom swap file size
   ```yaml
-  - name: "Install oracle db"
+  - name: Install oracle db
     hosts: all
 
     roles:
-      - role: "lean_delivery.oracle_db"
+      - role: lean_delivery.oracle_db
         oracle_version: 11
         patch_version: 11.2.0.4
-        transport_web: "http://my-storage.example.com"
+        transport_web: http://my-storage.example.com
         oracle_images:
-          - "p10404530_112040_Linux-x86-64_1of7.zip"
-          - "p10404530_112040_Linux-x86-64_2of7.zip"
-          - "p10404530_112040_Linux-x86-64_3of7.zip"
-          - "p10404530_112040_Linux-x86-64_4of7.zip"
-          - "p10404530_112040_Linux-x86-64_5of7.zip"
-          - "p10404530_112040_Linux-x86-64_6of7.zip"
-          - "p10404530_112040_Linux-x86-64_7of7.zip"
-        oracle_db_swapfile: "/oracle-swapfile-11"
+          - p10404530_112040_Linux-x86-64_1of7.zip
+          - p10404530_112040_Linux-x86-64_2of7.zip
+          - p10404530_112040_Linux-x86-64_3of7.zip
+          - p10404530_112040_Linux-x86-64_4of7.zip
+          - p10404530_112040_Linux-x86-64_5of7.zip
+          - p10404530_112040_Linux-x86-64_6of7.zip
+          - p10404530_112040_Linux-x86-64_7of7.zip
+        oracle_db_swapfile: /oracle-swapfile-11
         oracle_db_swap_count: 2048
   ```
 
 - Installing Oracle 12.1.0.2
   ```yaml
-  - name: "Install oracle db"
+  - name: Install oracle db
     hosts: all
 
     roles:
-      - role: "lean_delivery.oracle_db"
+      - role: lean_delivery.oracle_db
         oracle_version: 12
         patch_version: 12.1.0.2
-        transport_web: "http://my-storage.example.com"
+        transport_web: http://my-storage.example.com
         oracle_images:
-          - "linuxamd64_12102_database_1of2.zip"
-          - "linuxamd64_12102_database_2of2.zip"
+          - linuxamd64_12102_database_1of2.zip
+          - linuxamd64_12102_database_2of2.zip
   ```
 
 - Installing Oracle XE
   ```yaml
-  - name: "Install oracle db"
+  - name: Install oracle db
     hosts: all
 
     roles:
-      - role: "lean_delivery.oracle_db"
+      - role: lean_delivery.oracle_db
         oracle_version: xe
-        transport_web: "http://my-storage.example.com"
+        transport_web: http://my-storage.example.com
         oracle_images:
-          - "linux.x64_11gR2_xe.zip"
+          - linux.x64_11gR2_xe.zip
   ```
 
 License
