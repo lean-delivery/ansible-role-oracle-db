@@ -29,6 +29,6 @@ verifier:
     verbose: true
   directory: ../resources/tests/
   additional_files_or_dirs:
-    - oracle_db_11-12_test.py
+    - oracle_db_port_test.py
   lint:
     name: flake8

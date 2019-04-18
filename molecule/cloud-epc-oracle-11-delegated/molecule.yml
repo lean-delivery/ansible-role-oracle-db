@@ -39,6 +39,6 @@ verifier:
     verbose: true
   directory: ../resources/tests/
   additional_files_or_dirs:
-    - oracle_db_centos6_test.py
+    - oracle_db_centos6_service_test.py
   lint:
     name: flake8
