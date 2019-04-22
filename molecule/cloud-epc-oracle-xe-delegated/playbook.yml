@@ -5,7 +5,7 @@
     oracle_version: xe
     transport_web: "{{ lookup('env','STORAGE_EPC') }}/oracle-install"
     oracle_images:
-      - "linux.x64_11gR2_xe.zip"
+      - linux.x64_11gR2_xe.zip
   roles:
     - role: ansible-role-oracle-db
   become: True

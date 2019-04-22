@@ -6,7 +6,7 @@
     transport_web: "{{ lookup('env','STORAGE_AWS') }}/oracle-install"
     oracle_images:
       - "linux.x64_11gR2_xe.zip"
-    oracle_db_swapfile: "/oracle-swapfile-docker-xe"
+    oracle_db_swapfile: /oracle-swapfile-docker-xe
   roles:
     - role: ansible-role-oracle-db
   become: True
