@@ -2,7 +2,7 @@ Oracle Database role
 ====================
 [![License](https://img.shields.io/badge/license-Apache-green.svg?style=flat)](https://raw.githubusercontent.com/lean-delivery/ansible-role-oracle-db/master/LICENSE)
 [![Build Status](https://travis-ci.org/lean-delivery/ansible-role-oracle-db.svg?branch=master)](https://travis-ci.org/lean-delivery/ansible-role-oracle-db)
-[![Build Status](https://gitlab.com/lean-delivery/ansible-role-oracle-db/badges/master/build.svg)](https://gitlab.com/lean-delivery/ansible-role-oracle-db)
+[![Build Status](https://gitlab.com/lean-delivery/ansible-role-oracle-db/badges/master/build.svg)](https://gitlab.com/lean-delivery/ansible-role-oracle-db/pipelines)
 [![Galaxy](https://img.shields.io/badge/galaxy-lean__delivery.oracle__db-blue.svg)](https://galaxy.ansible.com/lean_delivery/oracle_db)
 ![Ansible](https://img.shields.io/ansible/role/d/35592.svg)
 ![Ansible](https://img.shields.io/badge/dynamic/json.svg?label=min_ansible_version&url=https%3A%2F%2Fgalaxy.ansible.com%2Fapi%2Fv1%2Froles%2F35592%2F&query=$.min_ansible_version)
@@ -70,26 +70,41 @@ If you want change size you swap file, please use variable `oracle_db_swap_count
 Role Variables
 --------------
 
-  - `oracle_version` - major number of Oracle Database version *default*: `12`
-  - `patch_version` - number of Oracle Database version with patch *default*: `12.1.0.2`
-  - `transport` - artifact source transport. Use  **web**, **local** for more predictable result *default*: `web`
+  - `oracle_version` - major number of Oracle Database version   
+     *default*: `12`
+  - `patch_version` - number of Oracle Database version with patch   
+     *default*: `12.1.0.2`
+  - `transport` - artifact source transport. Use  **web**, **local** for more predictable result   
+    *default*: `web`
   Available:
     - `web` Fetching artifact from custom web uri
     - `local` Local artifact
-  - `transport_web` - URI for http/https artifact e.g *default*: `http://my-storage.example.com`
-  - `transport_local` - path for local artifact *default*: `/tmp`
-  - `oracle_images` - list of Oracle Database files *default*:
+  - `transport_web` - URI for http/https artifact e.g   
+    *default*: `http://my-storage.example.com`
+  - `transport_local` - path for local artifact   
+    *default*: `/tmp`
+  - `oracle_images` - list of Oracle Database files   
+    default*:
       - ` - linuxamd64_12102_database_1of2.zip`
       - ` - linuxamd64_12102_database_2of2.zip`
-  - `oracle_base` - oracle base installation directory *default*: `/opt/oracledb`
-  - `unqname` - database unique name *default*: `orcl`
-  - `sid` - instance unique identifier *default*: `orcl`
-  - `db_user` - database user *default*: `oracle`
-  - `db_tablespace` - mandatory tablespace of the data dictionary *default*: `oracle`
-  - `db_port` - database port *default*: `1521`
-  - `oracle_db_swap_count` - swap file size *default*: role identify a swap file size
-  - `oracle_db_swapfile` - path to swap file *default* `/oracle-swapfile`
-  - `db_startup_timeout` - startup timeout for systemd service *default* `300`
+  - `oracle_base` - oracle base installation directory   
+    *default*: `/opt/oracledb`
+  - `unqname` - database unique name   
+    *default*: `orcl`
+  - `sid` - instance unique identifier   
+    *default*: `orcl`
+  - `db_user` - database user   
+    *default*: `oracle`
+  - `db_tablespace` - mandatory tablespace of the data dictionary   
+    *default*: `oracle`
+  - `db_port` - database port   
+    *default*: `1521`
+  - `oracle_db_swap_count` - swap file size   
+    *default*: role identify a swap file size
+  - `oracle_db_swapfile` - path to swap file   
+    *default* `/oracle-swapfile`
+  - `db_startup_timeout` - startup timeout for systemd service   
+    *default* `300`
 
   - **For Oracle Universal Installer**
     - `inventory_directory` *default* `/opt/oraInventory`
