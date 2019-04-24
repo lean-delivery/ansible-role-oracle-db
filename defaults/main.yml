@@ -1,24 +1,24 @@
 ---
 # defaults file for oracle-db
 
-transport: "web"
+transport: web
 # local
 # web
 
-transport_web: "http://my-storage.example.com"
+transport_web: http://my-storage.example.com
 
-trasnport_local: "/tmp"
+trasnport_local: /tmp
 
 oracle_version: 12
 patch_version: 12.1.0.2
 
 oracle_images:
-  - "linuxamd64_12102_database_1of2.zip"
-  - "linuxamd64_12102_database_2of2.zip"
+  - linuxamd64_12102_database_1of2.zip
+  - linuxamd64_12102_database_2of2.zip
 
-oracle_base: "/opt/oracledb"
-unqname: "orcl"
-sid: "orcl"
+oracle_base: /opt/oracledb
+unqname: orcl
+sid: orcl
 
 # Password for administrative accounts
 # All databases include the SYS, SYSTEM, SYSMAN and DBSNMP administrative
@@ -26,33 +26,34 @@ sid: "orcl"
 # passwords must be changed according Oracle password policy.
 
 # Password for all database users
-syspass: "SysPassOracle2017SecretToken"
+syspass: SysPassOracle2017SecretToken
 
 # SYS account password
-syspassword: "SysPassword2017SecretToken"
+syspassword: SysPassword2017SecretToken
 
 # SYSTEM account password
-systempassword: "SystemPassword2017SecretToken"
+systempassword: SystemPassword2017SecretToken
 
 # SYSMAN account password
-sysmanpassword: "SysmanPassword2017SecretToken"
+sysmanpassword: SysmanPassword2017SecretToken
 
 # DBSNMP account password
-dbsnmppassword: "DbSnmpPassword2017SecretToken"
+dbsnmppassword: DbSnmpPassword2017SecretToken
 
 # Initial user password
-db_user_password: "DbPassword2017SecretToken"
+db_user_password: DbPassword2017SecretToken
 
 # If a multitenant DB with one or more pluggable DBs is created
-pdbadminpassword: "PdbAdminPassword2017SecretToken"
+pdbadminpassword: PdbAdminPassword2017SecretToken
 
-db_user: "oracle"
-db_tablespace: "oracle"
+db_user: oracle
+db_tablespace: oracle
+db_startup_timeout: 300
 
 # set default `count=` value for `dd` for copies only this number of blocks
 oracle_db_swap_count: "{{ 16384 if ansible_memtotal_mb > 10240 else (ansible_memtotal_mb * 1.5)| \
                       round|int if ansible_memtotal_mb > 2048 else 8192 }}"
-oracle_db_swapfile: "/oracle-swapfile"
+oracle_db_swapfile: /oracle-swapfile
 # For Oracle Universal Installer
-inventory_directory: "/opt/oraInventory"
-ora_inst: "/etc/oraInst.loc"
+inventory_directory: /opt/oraInventory
+ora_inst: /etc/oraInst.loc

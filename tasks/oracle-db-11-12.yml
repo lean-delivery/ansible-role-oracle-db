@@ -1,153 +1,153 @@
 ---
 
-- name: "Install Oracle RDBMS"
-  become_user: "{{ oracledb.user }}"
+- name: Install Oracle RDBMS
+  become_user: '{{ oracledb.user }}'
   command: >
       {{ oracledb.install_directory }}/database/runInstaller -silent
       -waitforcompletion -ignorePrereq -responseFile
       {{ oracledb.install_directory }}/{{ oracledb.rsp_file }}
   args:
-    creates: "{{ oracle_base }}/product/{{ patch_version }}"
+    creates: '{{ oracle_base }}/product/{{ patch_version }}'
   register: rdbms_install
   failed_when: "(rdbms_install.stdout_lines is undefined) or
                 ('Successfully Setup Software.' not in rdbms_install.stdout_lines)"
   become: True
 
-- name: "Start scripts after install"
+- name: Start scripts after install
   command: >
       /bin/bash {{ inventory_directory }}/orainstRoot.sh
   args:
-    creates: "/etc/oraInst.loc"
+    creates: /etc/oraInst.loc
   become: True
 
-- name: "Start root.sh script"
+- name: Start root.sh script
   command: >
       /bin/bash {{ oracledb.oracle_home }}/root.sh
   args:
-    creates: "/etc/oratab"
+    creates: /etc/oratab
   become: True
 
-- name: "Create rsp file for oracle"
+- name: Create rsp file for oracle
   template:
-    src: "pwd.rsp.j2"
-    dest: "{{ oracledb.install_directory }}/{{ oracledb.pwd_file }}"
-    owner: "{{ oracledb.user }}"
-    group: "{{ oracledb.install_group }}"
+    src: pwd.rsp.j2
+    dest: '{{ oracledb.install_directory }}/{{ oracledb.pwd_file }}'
+    owner: '{{ oracledb.user }}'
+    group: '{{ oracledb.install_group }}'
   become: True
 
-- name: "Create db"
-  become_user: "{{ oracledb.user }}"
+- name: Create db
+  become_user: '{{ oracledb.user }}'
   command: >
       /bin/bash {{ oracledb.oracle_home }}/cfgtoollogs/configToolAllCommands
       RESPONSE_FILE={{ oracledb.install_directory }}/{{ oracledb.pwd_file }}
   register: db_install
   failed_when: "(db_install.stdout_lines is undefined) or
                 ('perform - mode finished for action: configure' not in db_install.stdout_lines)"
-  changed_when: "db_install.rc == 0"
+  changed_when: db_install.rc == 0
   become: True
 
-- name: "Change oratab"
+- name: Change oratab
   lineinfile:
     dest: /etc/oratab
     state: present
-    regexp: "{{ sid }}"
-    line: "{{ sid }}:{{ oracledb.oracle_home }}:Y"
+    regexp: '{{ sid }}'
+    line: '{{ sid }}:{{ oracledb.oracle_home }}:Y'
   become: True
 
-- name: "Create environment variables"
+- name: Create environment variables
   template:
-    src: "env.oracledb.sysconfig.j2"
-    dest: "/etc/sysconfig/env.oracledb"
+    src: env.oracledb.sysconfig.j2
+    dest: /etc/sysconfig/env.oracledb
   become: True
 
-- name: "Create systemd Oracle databases service for Centos 7"
+- name: Create systemd Oracle databases service for Centos 7
   template:
     src: oracledb.systemd.j2
-    dest: "/etc/systemd/system/oracledb.service"
+    dest: /etc/systemd/system/oracledb.service
   when: ansible_distribution_major_version == '7'
   become: True
 
-- name: "Create systemd Oracle databases service for Centos 6"
+- name: Create systemd Oracle databases service for Centos 6
   template:
     src: oracledb.sysv.j2
-    dest: "/etc/init.d/oracledb"
-    mode: "0755"
+    dest: /etc/init.d/oracledb
+    mode: 0755
   when: ansible_distribution_major_version == '6'
   become: True
 
-- name: "Copy template for user creation for oracle"
+- name: Copy template for user creation for oracle
   template:
-    src: "user.sql.j2"
-    dest: "{{ oracledb.oracle_home }}/user.sql"
-    owner: "{{ oracledb.user }}"
-    group: "{{ oracledb.install_group }}"
+    src: user.sql.j2
+    dest: '{{ oracledb.oracle_home }}/user.sql'
+    owner: '{{ oracledb.user }}'
+    group: '{{ oracledb.install_group }}'
   become: True
 
-- name: "Execute sql query for Oracle user, tablespace creation"
-  become_user: "{{ oracledb.user }}"
+- name: Execute sql query for Oracle user, tablespace creation
+  become_user: '{{ oracledb.user }}'
   shell: >
       source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
       as sysdba @{{ oracledb.oracle_home }}/user.sql
   register: tablespace
-  changed_when: "tablespace.rc == 0"
+  changed_when: tablespace.rc == 0
   become: True
 
-- name: "Stop Oracle database"
-  become_user: "{{ oracledb.user }}"
+- name: Stop Oracle database
+  become_user: '{{ oracledb.user }}'
   command: >
     {{ oracledb.oracle_home }}/bin/dbshut {{ oracledb.oracle_home }}
   args:
-    removes: "/var/tmp/.oracle/sEXTPROC1521"
+    removes: /var/tmp/.oracle/sEXTPROC1521
   become: True
 
-- name: "Update oracle configs"
+- name: Update oracle configs
   block:
 
-    - name: "Check if configs exist"
+    - name: Check if configs exist
       stat:
-        path: "{{ oracledb.oracle_home }}/network/admin/{{ item }}"
+        path: '{{ oracledb.oracle_home }}/network/admin/{{ item }}'
       loop:
-        - "listener.ora"
-        - "tnsnames.ora"
+        - listener.ora
+        - tnsnames.ora
       register: status
 
-    - name: "Update port in configs"
+    - name: Update port in configs
       replace:
-        path: "{{ oracledb.oracle_home }}/network/admin/{{ item.item }}"
+        path: '{{ oracledb.oracle_home }}/network/admin/{{ item.item }}'
         regexp: "PORT = \\d+"
-        replace: "PORT = {{ db_port }}"
+        replace: 'PORT = {{ db_port }}'
         backup: True
-      with_items: "{{ status.results }}"
+      with_items: '{{ status.results }}'
       when: item.stat.exists
       become: True
 
   when: db_port is defined
 
-- name: "Start Oracle database"
+- name: Start Oracle database
   service:
     name: oracledb
     state: started
     enabled: True
   become: True
 
-- name: "Setup database port"
+- name: Setup database port
   block:
 
-    - name: "Copy template for port changing"
+    - name: Copy template for port changing
       template:
-        src: "change_port.sql.j2"
-        dest: "{{ oracledb.oracle_home }}/change_port.sql"
-        owner: "{{ oracledb.user }}"
-        group: "{{ oracledb.install_group }}"
+        src: change_port.sql.j2
+        dest: '{{ oracledb.oracle_home }}/change_port.sql'
+        owner: '{{ oracledb.user }}'
+        group: '{{ oracledb.install_group }}'
       become: True
 
-    - name: "Execute sql query for port changing"
-      become_user: "{{ oracledb.user }}"
+    - name: Execute sql query for port changing
+      become_user: '{{ oracledb.user }}'
       shell: >
         source /home/{{ oracledb.user }}/.bashrc && {{ oracledb.oracle_home }}/bin/sqlplus /
         as sysdba @{{ oracledb.oracle_home }}/change_port.sql
       register: port_change
-      changed_when: "port_change.rc == 0"
+      changed_when: port_change.rc == 0
       become: True
 
   when: db_port is defined

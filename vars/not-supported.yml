@@ -1,5 +1,5 @@
 ---
-- name: "Warn on unsupported version"
+- name: Warn on unsupported version
   debug:
     msg: "This role does not support this oracle version.\
           Please contact team@lean-delivery.com"

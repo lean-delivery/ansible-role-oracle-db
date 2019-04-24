@@ -1,52 +1,52 @@
 ---
 
-- name: "Create dba group"
+- name: Create dba group
   group:
-    name: "{{ oracledb.dba_group }}"
+    name: '{{ oracledb.dba_group }}'
     state: present
   become: True
 
-- name: "Create oracle user"
+- name: Create oracle user
   user:
-    name: "{{ oracledb.user }}"
-    group: "{{ oracledb.dba_group }}"
+    name: '{{ oracledb.user }}'
+    group: '{{ oracledb.dba_group }}'
     state: present
-    home: "/home/{{ oracledb.user }}"
+    home: '/home/{{ oracledb.user }}'
     createhome: True
     append: True
   become: True
 
-- name: "Check oracle inventory requirements"
-  include_tasks: "oraInst/checkOraInst.yml"
+- name: Check oracle inventory requirements
+  include_tasks: ../oraInst/checkOraInst.yml
 
-- name: "Create oracledb directories (install)"
+- name: Create oracledb directories (install)
   file:
-    path: "{{ oracledb.install_directory }}"
+    path: '{{ oracledb.install_directory }}'
     state: directory
-    mode: "0755"
+    mode: 0755
   become: True
 
-- name: "Create {{ oracle_base }} directory"
+- name: 'Create {{ oracle_base }} directory'
   file:
-    path: "{{ oracle_base }}"
+    path: '{{ oracle_base }}'
     state: directory
-    mode: "0755"
-    owner: "{{ oracledb.user }}"
-    group: "{{ oracledb.install_group }}"
+    mode: 0755
+    owner: '{{ oracledb.user }}'
+    group: '{{ oracledb.dba_group }}'
   become: True
 
-- name: "Chown install directory to oracle user"
+- name: Chown install directory to oracle user
   file:
-    group: "{{ oracledb.install_group }}"
-    owner: "{{ oracledb.user }}"
-    path: "{{ oracledb.install_directory }}"
+    group: '{{ oracledb.install_group }}'
+    owner: '{{ oracledb.user }}'
+    path: '{{ oracledb.install_directory }}'
     state: directory
     recurse: True
   become: True
 
-- name: "Install requirements"
+- name: Install requirements
   package:
-    name: "{{ oracledb.install_requirements }}"
+    name: '{{ oracledb.install_requirements }}'
     state: present
   register: status
   retries: 10
@@ -54,43 +54,43 @@
   until: status is success
   become: True
 
-- name: "Fetch artifact with {{ transport }} transport"
-  include_tasks: "{{ transport_driver }}"
+- name: 'Fetch artifact with {{ transport }} transport'
+  include_tasks: '{{ transport_driver }}'
   with_first_found:
-    - "../fetch/{{ transport }}.yml"
-    - "../fetch/unknow-transport.yml"
+    - '../fetch/{{ transport }}.yml'
+    - '../fetch/unknow-transport.yml'
   loop_control:
     loop_var: transport_driver
 
-- name: "Check unziped folder"
+- name: Check unziped folder
   stat:
-    path: "{{ oracledb.install_directory }}/database"
+    path: '{{ oracledb.install_directory }}/database'
   register: database
   become: True
 
-- name: "Unzip oracle installer"
+- name: Unzip oracle installer
   unarchive:
-    src: "{{ item }}"
-    dest: "{{ oracledb.install_directory }}"
+    src: '{{ item }}'
+    dest: '{{ oracledb.install_directory }}'
     remote_src: True
-  loop: "{{ oracle_db_artifacts }}"
+  loop: '{{ oracle_db_artifacts }}'
   when: not database.stat.exists
   become: True
 
-- name: "Remove installs"
+- name: Remove installs
   file:
     state: absent
-    path: "{{ oracledb.install_directory }}/{{ item }}"
-  loop: "{{ oracle_images }}"
+    path: '{{ oracledb.install_directory }}/{{ item }}'
+  loop: '{{ oracle_images }}'
   become: True
 
-- name: "Copy rsp file for Oracle"
+- name: Copy rsp file for Oracle
   template:
-    src: "{{ oracledb.rsp_template }}.j2"
-    dest: "{{ oracledb.install_directory }}/{{ oracledb.rsp_file }}"
-    owner: "{{ oracledb.user }}"
-    group: "{{ oracledb.install_group }}"
+    src: '{{ oracledb.rsp_template }}.j2'
+    dest: '{{ oracledb.install_directory }}/{{ oracledb.rsp_file }}'
+    owner: '{{ oracledb.user }}'
+    group: '{{ oracledb.install_group }}'
   become: True
 
-- name: "Read Oracle profile"
-  include_tasks: "profile/oracle-db-profile.yml"
+- name: Write Oracle profile
+  include_tasks: ../profile/oracle-db-profile.yml

@@ -1,40 +1,40 @@
 ---
 
-- name: "Check /etc/oratab exists"
+- name: Check /etc/oratab exists
   stat:
     path: /etc/oratab
   register: etc_oratab
 
-- name: "Oracle DB install"
+- name: Oracle DB install
   block:
 
-    - name: "Choose vars based on oracle version"
-      include_vars: "{{ version }}"
+    - name: Choose vars based on oracle version
+      include_vars: '{{ version }}'
       with_first_found:
-        - "oracle{{ oracle_version }}.yml"
-        - "not-supported.yml"
+        - 'oracle{{ oracle_version }}.yml'
+        - not-supported.yml
       loop_control:
         loop_var: version
 
-    - name: "Make preparations and install requirements"
-      include_tasks: "system/prepare.yml"
+    - name: Make preparations and install requirements
+      include_tasks: system/prepare.yml
 
-    - name: "Create swap file"
-      include_tasks: "system/swap.yml"
+    - name: Create swap file
+      include_tasks: system/swap.yml
       when: '(oracledb.swapfile_count|int - ansible_swaptotal_mb|int) > 2'
 
-    - name: "Adjust kernel parameters and shared memory"
-      include_tasks: "system/kernel.yml"
+    - name: Adjust kernel parameters and shared memory
+      include_tasks: system/kernel.yml
 
-    - name: "Oracle DB XE install"
+    - name: Oracle DB XE install
       include_tasks: oracle-db-xe.yml
-      when: oracle_version == "xe"
+      when: oracle_version == 'xe'
 
-    - name: "Oracle DB 11 or 12 install"
+    - name: Oracle DB 11 or 12 install
       include_tasks: oracle-db-11-12.yml
       when: oracle_version == 11 or oracle_version == 12
 
-    - name: "Postinstall actions"
-      include_tasks: "system/postinstall.yml"
+    - name: Postinstall actions
+      include_tasks: system/postinstall.yml
 
   when: not etc_oratab.stat.exists

@@ -4,34 +4,34 @@ dependency:
   options:
     role-file: requirements.yml
 driver:
-  name: delegated
+  name: ec2
 lint:
   name: yamllint
   options:
     config-file: .yamllint
 platforms:
   - name: test-oracle-db-11
-    shape: large
-    image: CentOS7_64-bit
-    region: AWS-EUCENTRAL
-    wait_timeout: 3600
+    image: ami-9887c6e7
+    instance_type: m5.large
+    region: us-east-1
+    vpc_subnet_id: subnet-05a2ef2b767afec50
+    assign_public_ip: False
+    spot_price: 0.04
+    security_group_name:
+      - default
+    wait_timeout: 1800
+    ssh_user: centos
     groups:
       - rhel_family
-      - oracle_db_ct
 provisioner:
   name: ansible
   log: True
   playbooks:
-    create: ../resources/provisioning/create.yml
-    prepare: ../resources/provisioning/prepare.yml
-    destroy: ../resources/provisioning/destroy.yml
-  config_options:
-    ssh_connection:
-      control_path: "/var/ans/%%h"
+    create: ../resources/create.yml
+    prepare: ../resources/prepare.yml
+    destroy: ../resources/provisioning/AWS/destroy.yml
   lint:
     name: ansible-lint
-  env:
-    ANSIBLE_LIBRARY: "/home/gitlab-runner/.local/lib/python2.7/site-packages/epam_ansible"
 scenario:
   name: cloud-aws-oracle-11-delegated
 verifier:
@@ -39,5 +39,7 @@ verifier:
   options:
     verbose: true
   directory: ../resources/tests/
+  additional_files_or_dirs:
+    - oracle_db_port_test.py
   lint:
     name: flake8

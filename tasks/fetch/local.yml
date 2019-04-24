@@ -1,7 +1,7 @@
 ---
 
-- name: "Artifacts stored localy"
+- name: Artifacts stored localy
   set_fact:
     oracle_db_artifacts:
       "{{ oracle_db_artifacts | default([]) + [ transport_local + '/' + item ] }}"
-  loop: "{{ oracle_images }}"
+  loop: '{{ oracle_images }}'

@@ -15,7 +15,6 @@ platforms:
     privileged: True
     force_kill: False
     groups:
-      - oracle_db_ct
       - rhel_family
 provisioner:
   name: ansible
@@ -29,5 +28,7 @@ verifier:
   options:
     verbose: true
   directory: ../resources/tests/
+  additional_files_or_dirs:
+    - oracle_db_port_test.py
   lint:
     name: flake8

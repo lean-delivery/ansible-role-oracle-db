@@ -1,6 +1,6 @@
 ---
 - name: Test oracle-db 12 from static
-  hosts: oracle_db_ct
+  hosts: all
   vars:
     oracle_version: 12
     patch_version: 12.1.0.2

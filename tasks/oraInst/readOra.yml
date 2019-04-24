@@ -1,29 +1,29 @@
 ---
 
-- name: "Get content from {{ ora_inst }}"
+- name: 'Get content from {{ ora_inst }}'
   slurp:
-    src: "{{ ora_inst }}"
+    src: '{{ ora_inst }}'
   register: read_ora
 
-- name: "Read config"
+- name: Read config
   set_fact:
     ora_inst_content: "{{ read_ora['content'] | b64decode }}"
 
-- name: "Get value of install_group"
+- name: Get value of install_group
   set_fact:
     oracledb.install_group: "{{ item.split('=').1 }}"
-  loop: "{{ ora_inst_content.splitlines() }}"
-  when: item.split('=').0 == "inst_group"
+  loop: '{{ ora_inst_content.splitlines() }}'
+  when: item.split('=').0 == 'inst_group'
 
-- name: "Get value of inventory_loc"
+- name: Get value of inventory_loc
   set_fact:
     inventory_directory: "{{ item.split('=').1 }}"
-  loop: "{{ ora_inst_content }}"
-  when: item.split('=').0 == "inventory_loc"
+  loop: '{{ ora_inst_content }}'
+  when: item.split('=').0 == 'inventory_loc'
 
-- name: "Add {{ oracledb.user }} to {{ oracledb.install_group }}"
+- name: 'Add {{ oracledb.user }} to {{ oracledb.install_group }}'
   user:
-    name: "{{ oracledb.user }}"
-    groups: "{{ oracledb.install_group }}"
+    name: '{{ oracledb.user }}'
+    groups: '{{ oracledb.install_group }}'
     append: True
   become: True

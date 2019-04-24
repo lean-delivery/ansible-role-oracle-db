@@ -1,15 +1,14 @@
 ---
 - name: Install oracle-db
-  hosts: oracle_db_ct
+  hosts: all
   vars:
     oracle_version: 12
     patch_version: 12.1.0.2
-    transport_web: "{{ lookup('env','STORAGE_EPC') }}/oracle-install"
+    transport_web: "{{ lookup('env','STORAGE_AWS') }}/oracle-install"
     oracle_images:
       - linuxamd64_12102_database_1of2.zip
       - linuxamd64_12102_database_2of2.zip
-    oracle_db_swapfile: "/oracle-swapfile-docker-12"
-    oracle_db_swap_count: 2096
+    oracle_db_swapfile: /oracle-swapfile-docker-12
     db_port: 1522
   roles:
     - role: ansible-role-oracle-db
