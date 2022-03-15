@@ -51,6 +51,9 @@ db_tablespace: oracle
 db_startup_timeout: 300
 
 # set default `count=` value for `dd` for copies only this number of blocks
+ansible_memtotal_mb: 4096
+ansible_swaptotal_mb: 2048
+
 oracle_db_swap_count: "{{ 16384 if ansible_memtotal_mb > 10240 else (ansible_memtotal_mb * 1.5)| \
                       round|int if ansible_memtotal_mb > 2048 else 8192 }}"
 oracle_db_swapfile: /oracle-swapfile
